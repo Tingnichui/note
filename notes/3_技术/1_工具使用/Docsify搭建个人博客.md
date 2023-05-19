@@ -565,3 +565,18 @@ public class util {
 
 ```
 
+# 配置Github pages
+
+创建一个public仓库，将docsify相关文件全部上传仓库，修改分支命名为master，在setting中找到Pages配置下图
+
+这是我的仓库地址：https://github.com/Tingnichui/note
+
+![image-20230520024143392](https://chunhui-a.oss-cn-nanjing.aliyuncs.com/typora/img/image-20230520024143392.png)
+
+
+
+文章
+
+1. [Github+docsify零成本轻松打造在线文档网站](https://cloud.tencent.com/developer/news/675461)
+
+2. [Github pages 绑定个人域名](https://segmentfault.com/a/1190000011203711)
