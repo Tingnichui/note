@@ -1,5 +1,5 @@
 {
-    "rootDir": "E:\\myfile\\note",
+    "rootDir": "E:\\myfile\\chunhui\\note",
     "ignoreDir": [
         "navbar",
         "docsify-sidebar-build"
