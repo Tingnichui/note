@@ -1,0 +1,22 @@
+{
+    "rootDir": "E:\\myfile\\note",
+    "ignoreDir": [
+        "navbar",
+        "docsify-sidebar-build"
+    ],
+    "ignoreFile": [
+        "README.md",
+        "favicon.ico",
+        "index.html"
+    ],
+    "ignoreMatchDir": [
+        "^\\..*"
+    ],
+    "ignoreMatchFile": [
+        "^_.*",
+        "^\\..*",
+        "^耿辉_Java_13291306661.*",
+        "^x_.*",
+        ".*\\.xmind$"
+    ]
+}
