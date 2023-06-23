@@ -70,6 +70,46 @@
 
    ![image-20230623023609777](https://chunhui-a.oss-cn-nanjing.aliyuncs.com/typora/img/image-20230623023609777.png)
 
+#### 设置固定ip
+
+查看vmware nat配置  
+
+![image-20230624013513367](https://chunhui-a.oss-cn-nanjing.aliyuncs.com/typora/img/image-20230624013513367.png)
+
+`ip addr` 查看网卡信息，下图看到192.168.139.130的网卡为ens32
+
+![image-20230624005806875](https://chunhui-a.oss-cn-nanjing.aliyuncs.com/typora/img/image-20230624005806875.png)
+
+找到ens32网卡的配置文件
+
+```bash
+cd /etc/sysconfig/network-scripts/ && ls | grep ens32
+```
+
+修改ens32网卡的配置文件
+
+```bash
+vi ifcfg-ens32
+```
+
+![image-20230624012929335](https://chunhui-a.oss-cn-nanjing.aliyuncs.com/typora/img/image-20230624012929335.png)
+
+```
+BOOTPROTO="static"
+ONBOOT="yes"
+IPADDR=192.168.139.101
+GATEWAY=192.168.139.2
+NETMASK=255.255.255.0
+DNS1=114.114.114.114
+DNS2=8.8.8.8
+```
+
+重启网卡
+
+```bash
+service network restart
+```
+
 #### 文章链接
 
 1. [CentOS 的安装——超详细教程](https://blog.csdn.net/weixin_46703995/article/details/121191113) ——我使用的是这个教程

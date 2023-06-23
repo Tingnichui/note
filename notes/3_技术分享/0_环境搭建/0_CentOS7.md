@@ -1,12 +1,40 @@
+## 防火墙
+
+```bash
+systemctl status firewalld.service
+```
+
+```bash
+systemctl stop firewalld.service
+```
+
+```bash
+systemctl disable firewalld.service
+```
+
+## wget
+
+查看是否安装，有的话就卸载`yum remove wget`
+
+```bash
+rpm -qa|grep 'wget'
+```
+
+下载安装
+
+```bash
+yum install -y wget
+```
+
 ## vim
 
-### 0.更新yum
+0.更新yum
 
 ```bash
 yum update
 ```
 
-### 1.查看是否已经安装了vim
+1.查看是否已经安装了vim
 
 ```bash
 rpm -qa|grep vim
@@ -20,13 +48,13 @@ vim-enhanced-7.4.160-4.el7.x86_64
 vim-common-7.4.160-4.el7.x86_64
 ```
 
-### 2.安装vim
+2.安装vim
 
 ```
 yum -y install vim*
 ```
 
-### 3.配置vim
+3.配置vim
 
 编辑配置文件
 
@@ -44,7 +72,7 @@ set autoindent  " 设置每次单击Enter键后，光标移动到下一行时与
 syntax on       " 即设置语法检测，当编辑C或者Shell脚本时，关键字会用特殊颜色显示
 ```
 
-### 参考文章
+参考文章
 
 1. [Centos7安装vim](https://blog.csdn.net/qq_39329994/article/details/121487148) 
 
@@ -54,13 +82,13 @@ syntax on       " 即设置语法检测，当编辑C或者Shell脚本时，关�
 
 ## Java
 
-### 0.下载
+0.下载
 
 https://www.oracle.com/java/technologies/downloads/#java8
 
 ![image-20230405154627233](https://chunhui-a.oss-cn-nanjing.aliyuncs.com/typora/img/image-20230405154627233.png)
 
-### 1.上传服务器并解压
+1.上传服务器并解压
 
 用xftp，或者直接用xshell切换到解压目录，将文件拖动进去就行，我这里下载到/usr/local这个目录
 
@@ -70,7 +98,7 @@ tar -zxvf jdk-8u361-linux-x64.tar.gz
 mv jdk1.8.0_371/ java
 ```
 
-### 2.配置环境
+2.配置环境
 
 编辑配置
 
@@ -99,7 +127,7 @@ source /etc/profile
 java -version
 ```
 
-### 参考文章
+参考文章
 
 1. [centos7安装java(多种方式)](https://blog.csdn.net/m0_61035257/article/details/125705400) 
 
@@ -109,7 +137,7 @@ java -version
 
 ## MySQL
 
-### 安装
+安装
 
 查看 MariaDB
 
@@ -337,7 +365,7 @@ chkconfig --list
 systemctl start mysqld
 ```
 
-### 参考文章
+参考文章
 
 1. [Linux：CentOS7安装MySQL8（详）](https://www.cnblogs.com/secretmrj/p/15600144.html)
 2. [centos7安装MySQL8并设置开机自启](https://blog.csdn.net/zzc12121/article/details/128328900) 
@@ -431,9 +459,11 @@ WantedBy=multi-user.target
 # 设置开机自启
 systemctl start redis.service
 systemctl enable redis.service
+# 重启redis
+systemctl start redis.service
 ```
 
-### 参考文章
+参考文章
 
 1. [Centos安装Redis](https://blog.csdn.net/qq_38584262/article/details/125773286)
 2. [Redis6设置自启动CentOS](https://blog.csdn.net/zwrlj527/article/details/113374863) 
@@ -497,8 +527,6 @@ vim /etc/rc.local
 chmod 755 /etc/rc.local
 ```
 
-
-
-### 参考文章
+参考文章
 
 1. [CentOS安装Nginx](https://blog.csdn.net/qq_33381971/article/details/123328191)
