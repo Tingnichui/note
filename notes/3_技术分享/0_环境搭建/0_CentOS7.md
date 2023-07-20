@@ -530,3 +530,5 @@ chmod 755 /etc/rc.local
 参考文章
 
 1. [CentOS安装Nginx](https://blog.csdn.net/qq_33381971/article/details/123328191)
+
+## Kafka

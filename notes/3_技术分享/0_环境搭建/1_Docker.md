@@ -606,3 +606,43 @@ local_port = 3389
 remote_port = 18389
 ```
 
+# Kafka
+
+https://blog.csdn.net/y393016244/article/details/126405864
+
+安装zk
+
+```shell
+docker run -d --name zookeeper-server --network tingnichui -e ALLOW_ANONYMOUS_LOGIN=yes bitnami/zookeeper:latest
+```
+
+安装kafka
+
+```shell
+docker run -d --name kafka-server \
+    --network tingnichui \
+    -p 9092:9092 \
+    -e ALLOW_PLAINTEXT_LISTENER=yes \
+    -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper-server:2181 \
+    -e KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://192.168.139.101:9092 \
+    bitnami/kafka:latest
+```
+
+安装kafka map
+
+```shell
+docker run -d --name kafka-map \
+    --network tingnichui \
+    -p 18080:8080 \
+    -e DEFAULT_USERNAME=admin \
+    -e DEFAULT_PASSWORD=admin \
+    dushixiang/kafka-map:latest
+    
+    
+-v /home/kafka-map/data:/usr/local/kafka-map/data \
+```
+
+# logstash
+
+
+

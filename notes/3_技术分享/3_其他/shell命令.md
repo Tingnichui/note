@@ -43,3 +43,26 @@ lscpu
 ```shell
 nproc
 ```
+
+将显示指定文件夹的总大小（以人类可读的格式）
+
+```
+du -sh /path/to/directory
+```
+
+## tar打包与解压
+
+打包
+
+```
+
+```
+
+## logstash
+
+检查配置是否有语法错误
+
+```
+./bin/logstash -f ./config/logstash.conf -t
+```
+
