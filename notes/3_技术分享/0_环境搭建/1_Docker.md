@@ -606,7 +606,7 @@ local_port = 3389
 remote_port = 18389
 ```
 
-# Kafka
+# Kafka 不带密码认证
 
 https://blog.csdn.net/y393016244/article/details/126405864
 
@@ -632,7 +632,7 @@ docker run -d --name kafka-server \
 
 ```shell
 docker run -d --name kafka-map \
-    --network tingnichui \
+    --network tingnichui \ 
     -p 18080:8080 \
     -e DEFAULT_USERNAME=admin \
     -e DEFAULT_PASSWORD=admin \
@@ -645,4 +645,98 @@ docker run -d --name kafka-map \
 # logstash
 
 
+
+# Kafka 密码认证
+
+kafka_server_jaas.conf
+
+```
+KafkaServer {
+org.apache.kafka.common.security.plain.PlainLoginModule required
+    username="admin"
+    password="123456"
+    user_admin="admin"
+    user_alice="123456";
+};
+Client {
+    org.apache.kafka.common.security.plain.PlainLoginModule required
+    username="admin"
+    password="123456";
+};
+```
+
+zk_server_jaas.conf
+
+```
+ Server {
+    org.apache.kafka.common.security.plain.PlainLoginModule required
+    username="admin"
+    password="123456"
+    user_admin="admin";
+};
+```
+
+docker-compose.yml
+
+```yaml
+version: '2'
+services:
+    zookeeper:
+        image: confluentinc/cp-zookeeper:5.1.2
+        hostname: zookeeper
+        container_name: zookeeper
+        ports:
+            - 2182:2182
+        environment:
+            ZOOKEEPER_CLIENT_PORT: 2182
+            ZOOKEEPER_TICK_TIME: 2000
+            ZOOKEEPER_MAXCLIENTCNXNS: 0
+            ZOOKEEPER_AUTHPROVIDER.1: org.apache.zookeeper.server.auth.SASLAuthenticationProvider
+            ZOOKEEPER_REQUIRECLIENTAUTHSCHEME: sasl
+            ZOOKEEPER_JAASLOGINRENEW: 3600000
+            KAFKA_OPTS: -Djava.security.auth.login.config=/etc/kafka/secrets/zk_server_jaas.conf
+        volumes:
+            - /home/kafka/secrets:/etc/kafka/secrets
+    kafka:
+        image: confluentinc/cp-kafka:5.1.2
+        hostname: broker
+        container_name: kafka
+        depends_on:
+            - zookeeper
+        ports:
+            - 9092:9092
+        environment:
+            KAFKA_BROKER_ID: 1
+            KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2182/kafka'
+            KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+            KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+            KAFKA_LISTENERS: SASL_PLAINTEXT://0.0.0.0:9092
+            KAFKA_ADVERTISED_LISTENERS: SASL_PLAINTEXT://192.168.139.101:9092
+            KAFKA_SECURITY_INTER_BROKER_PROTOCOL: SASL_PLAINTEXT
+            KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
+            KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
+            KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.auth.SimpleAclAuthorizer
+            KAFKA_OPTS: -Djava.security.auth.login.config=/etc/kafka/secrets/kafka_server_jaas.conf
+            KAFKA_SUPER_USERS: User:admin
+        volumes:
+            - /home/kafka/secrets:/etc/kafka/secrets
+```
+
+```shell
+docker-compose -f docker-compose.yml up -d
+```
+
+# docker-compose
+
+```shell
+curl -L https://github.com/docker/compose/releases/download/v2.5.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+```
+
+```
+chmod +x /usr/local/bin/docker-compose
+```
+
+```
+docker-compose version
+```
 
