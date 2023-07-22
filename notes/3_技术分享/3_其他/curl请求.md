@@ -31,3 +31,4 @@ curl  -v -X POST -H "Content-Type:application/json"  http://172.24.7.63:36963/VI
 ## 参考文章
 
 1. [Linux中使用curl命令发送带参数的get请求和post请求](https://blog.csdn.net/finghting321/article/details/105733140)
+2. [Linux命令发送Http的get或post请求](https://blog.csdn.net/zxy987872674/article/details/80091625)
