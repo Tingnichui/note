@@ -10,6 +10,10 @@ ps -ef | grep <service_name> | grep -v grep
 lsof -i:7089
 ```
 
+```shell
+netstat -tuln | grep LISTEN | grep 7089
+```
+
 通过服务进程pid查看端口
 
 ```shell

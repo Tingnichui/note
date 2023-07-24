@@ -631,12 +631,7 @@ docker run -d --name kafka-server \
 安装kafka map
 
 ```shell
-docker run -d --name kafka-map \
-    --network tingnichui \ 
-    -p 18080:8080 \
-    -e DEFAULT_USERNAME=admin \
-    -e DEFAULT_PASSWORD=admin \
-    dushixiang/kafka-map:latest
+docker run -d --name kafka-map --network tingnichui -p 8080:8080 -e DEFAULT_USERNAME=admin -e DEFAULT_PASSWORD=admin dushixiang/kafka-map:latest
     
     
 -v /home/kafka-map/data:/usr/local/kafka-map/data \
@@ -725,6 +720,46 @@ services:
 ```shell
 docker-compose -f docker-compose.yml up -d
 ```
+
+```shell
+docker run -d \
+    --name zookeeper \
+    -p 2182:2182 \
+    -e ZOOKEEPER_CLIENT_PORT=2182 \
+    -e ZOOKEEPER_TICK_TIME=2000 \
+    -e ZOOKEEPER_MAXCLIENTCNXNS=0 \
+    -e ZOOKEEPER_AUTHPROVIDER.1=org.apache.zookeeper.server.auth.SASLAuthenticationProvider \
+    -e ZOOKEEPER_REQUIRECLIENTAUTHSCHEME=sasl \
+    -e ZOOKEEPER_JAASLOGINRENEW=3600000 \
+    -e KAFKA_OPTS="-Djava.security.auth.login.config=/etc/kafka/secrets/zk_server_jaas.conf" \
+    -v /home/kafka/secrets:/etc/kafka/secrets \
+    confluentinc/cp-zookeeper:5.1.2
+```
+
+
+
+```shell
+docker run -d \
+    --name kafka \
+    -p 9092:9092 \
+    --link zookeeper:zookeeper \
+    -e KAFKA_BROKER_ID=1 \
+    -e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2182/kafka \
+    -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 \
+    -e KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS=0 \
+    -e KAFKA_LISTENERS=SASL_PLAINTEXT://0.0.0.0:9092 \
+    -e KAFKA_ADVERTISED_LISTENERS=SASL_PLAINTEXT://192.168.139.101:9092 \
+    -e KAFKA_SECURITY_INTER_BROKER_PROTOCOL=SASL_PLAINTEXT \
+    -e KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL=PLAIN \
+    -e KAFKA_SASL_ENABLED_MECHANISMS=PLAIN \
+    -e KAFKA_AUTHORIZER_CLASS_NAME=kafka.security.auth.SimpleAclAuthorizer \
+    -e KAFKA_OPTS="-Djava.security.auth.login.config=/etc/kafka/secrets/kafka_server_jaas.conf" \
+    -e KAFKA_SUPER_USERS=User:admin \
+    -v /home/kafka/secrets:/etc/kafka/secrets \
+    confluentinc/cp-kafka:5.1.2
+```
+
+
 
 # docker-compose
 

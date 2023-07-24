@@ -98,6 +98,7 @@
       - [shell命令](/notes/3_技术分享/3_其他/shell命令.md)
       - [wget](/notes/3_技术分享/3_其他/wget.md)
       - [windows备份与还原](/notes/3_技术分享/3_其他/windows备份与还原.md)
+      - [zookeeper命令](/notes/3_技术分享/3_其他/zookeeper命令.md)
       - [子网掩码](/notes/3_技术分享/3_其他/子网掩码.md)
       - [提取免安装JDK](/notes/3_技术分享/3_其他/提取免安装JDK.md)
       - [生成https证书](/notes/3_技术分享/3_其他/生成https证书.md)
