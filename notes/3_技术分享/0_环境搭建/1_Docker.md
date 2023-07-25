@@ -77,7 +77,8 @@ docker load -i ~/container-backup.tar
 
 ```bash
 拉取mysql
-docker pull mysql 
+docker pull mysql:latest
+docker pull mysql:5.7.42
 
 运行一个mysql
 docker run --network tingnichui --network-alias mysql --restart=always -d -p 3306:3306 --name mysql -v /home/mysql/log:/var/log/mysql  -v /home/mysql/data:/var/lib/mysql  -v /home/mysql/conf:/etc/mysql/conf.d -e TZ=Asia/Shanghai  -e MYSQL_ROOT_PASSWORD=password mysql --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
@@ -480,7 +481,7 @@ https://gitee.com/hankinsli/natserver
 
 [使用frp进行内网穿透，实现ssh远程访问Linux](https://blog.csdn.net/qq_44577070/article/details/121893406?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522167292486616800215010194%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=167292486616800215010194&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-121893406-null-null.142^v70^one_line,201^v4^add_ask&utm_term=frps%20ssh&spm=1018.2226.3001.4187) 
 
-## 服务端部署frps
+#### 服务端部署frps
 
 docker 部署frps
 
@@ -504,7 +505,7 @@ docker pull snowdreamtech/frps
 docker run -d -m 100m --network host -v /home/frp/frps.ini:/etc/frp/frps.ini --name frps --restart always snowdreamtech/frps
 ```
 
-## 客户端部署frpc
+#### 客户端部署frpc
 
  docker部署frpc
 
@@ -606,7 +607,9 @@ local_port = 3389
 remote_port = 18389
 ```
 
-# Kafka 不带密码认证
+# Kafka
+
+#### 不带密码认证
 
 https://blog.csdn.net/y393016244/article/details/126405864
 
@@ -635,6 +638,100 @@ docker run -d --name kafka-map --network tingnichui -p 8080:8080 -e DEFAULT_USER
     
     
 -v /home/kafka-map/data:/usr/local/kafka-map/data \
+```
+
+#### 密码验证
+
+https://www.jianshu.com/p/9c1f9dea60ed
+
+
+
+https://blog.csdn.net/yztezhl/article/details/127627854
+
+kafka_server_jaas.conf
+
+```
+mkdir -p /home/kafka/secrets
+```
+
+```
+KafkaServer {
+	org.apache.kafka.common.security.plain.PlainLoginModule required
+    username="admin"
+    password="admin"
+    user_admin="admin"
+    user_alice="admin";
+};
+Client {
+    org.apache.kafka.common.security.plain.PlainLoginModule required
+    username="admin"
+    password="admin";
+};
+```
+
+zk_server_jaas.conf
+
+```
+Server {
+    org.apache.zookeeper.server.auth.DigestLoginModule required
+    username="admin"
+    password="admin"
+    user_admin="admin";
+};
+```
+
+docker-compose.yml
+
+```shell
+version: '2'
+services:
+    zookeeper:
+        image: confluentinc/cp-zookeeper:5.1.2
+        hostname: zookeeper
+        container_name: zookeeper
+        restart: always
+        ports:
+            - 2182:2182
+        environment:
+            ZOOKEEPER_CLIENT_PORT: 2182
+            ZOOKEEPER_TICK_TIME: 2000
+            ZOOKEEPER_MAXCLIENTCNXNS: 0
+            ZOOKEEPER_AUTHPROVIDER.1: org.apache.zookeeper.server.auth.DigestLoginModule
+            ZOOKEEPER_REQUIRECLIENTAUTHSCHEME: sasl
+            ZOOKEEPER_JAASLOGINRENEW: 3600000
+            KAFKA_OPTS: -Djava.security.auth.login.config=/etc/kafka/secrets/zk_server_jaas.conf
+        volumes:
+            - ./secrets:/etc/kafka/secrets
+    kafka:
+        image: confluentinc/cp-kafka:5.1.2
+        hostname: broker
+        container_name: kafka
+        restart: always
+        depends_on:
+            - zookeeper
+        ports:
+            - 9092:9092
+        environment:
+            KAFKA_BROKER_ID: 1
+            KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2182/kafka'
+            KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+            KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+            KAFKA_LISTENERS: SASL_PLAINTEXT://0.0.0.0:9092
+            KAFKA_ADVERTISED_LISTENERS: SASL_PLAINTEXT://192.168.139.102:9092
+            KAFKA_SECURITY_INTER_BROKER_PROTOCOL: SASL_PLAINTEXT
+            KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
+            KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
+            KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.auth.SimpleAclAuthorizer
+            KAFKA_OPTS: -Djava.security.auth.login.config=/etc/kafka/secrets/kafka_server_jaas.conf
+            KAFKA_SUPER_USERS: User:admin
+        volumes:
+            - ./secrets:/etc/kafka/secrets
+```
+
+
+
+```shell
+docker-compose -f docker-compose.yml up -d
 ```
 
 # logstash

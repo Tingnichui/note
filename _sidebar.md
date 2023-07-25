@@ -91,6 +91,7 @@
       - [curl请求](/notes/3_技术分享/3_其他/curl请求.md)
       - [Java项目打包成exe](/notes/3_技术分享/3_其他/Java项目打包成exe.md)
       - [linux用户权限](/notes/3_技术分享/3_其他/linux用户权限.md)
+      - [mysql备份与恢复](/notes/3_技术分享/3_其他/mysql备份与恢复.md)
       - [MySql用户管理](/notes/3_技术分享/3_其他/MySql用户管理.md)
       - [MySQL管理数据库连接数](/notes/3_技术分享/3_其他/MySQL管理数据库连接数.md)
       - [RAID](/notes/3_技术分享/3_其他/RAID.md)
