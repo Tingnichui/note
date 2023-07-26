@@ -153,7 +153,7 @@ rpm -e --nodeps 文件名
 
 ![image-20211124173745968](https://chunhui-a.oss-cn-nanjing.aliyuncs.com/typora/img/r3L86a5PeO4pmVY.png)
 
-下载资源包
+下载资源包 https://downloads.mysql.com/archives/community/
 
 ```bash
 cd /usr/local/

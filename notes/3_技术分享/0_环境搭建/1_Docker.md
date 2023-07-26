@@ -1,20 +1,104 @@
 # Docker 安装
 
-```bash
-sudo yum remove docker \ docker-client \ docker-client-latest \docker-common \docker-latest \docker-latest-logrotate \docker-logrotate \ocker-engine
+#### 移除残留docker安装
 
+```
+sudo yum remove docker \ docker-client \ docker-client-latest \docker-common \docker-latest \docker-latest-logrotate \docker-logrotate \ocker-engine
+```
+
+#### 安装
+
+##### 1.yum安装
+
+安装yum工具 添加镜像站点
+
+```
 yum install -y yum-utils
 yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+```
 
+安装docker
+
+```shell
 yum install -y docker
+```
 
-yum list installed |grep docker
+查看是否安装成功
 
+```shell
+yum list installed | grep docker
+```
+
+##### 2.离线安装
+
+https://docs.docker.com/engine/install/binaries/#install-daemon-and-client-binaries-on-linux
+
+https://www.gold404.cn/info/140
+
+下载二[进制包](https://download.docker.com/linux/static/stable/x86_64/) 上传服务器并解压
+
+```shell
+tar -zxvf docker-19.03.5.tgz
+```
+
+将docker 相关命令拷贝到 /usr/bin
+
+```
+cp docker/* /usr/bin/
+```
+
+将docker注册为服务
+
+```
+vi /etc/systemd/system/docker.service
+```
+
+```
+[Unit]
+Description=Docker Application Container Engine
+Documentation=https://docs.docker.com
+After=network-online.target firewalld.service
+Wants=network-online.target
+ 
+[Service]
+Type=notify
+ExecStart=/usr/bin/dockerd
+ExecReload=/bin/kill -s HUP $MAINPID
+LimitNOFILE=infinity
+LimitNPROC=infinity
+TimeoutStartSec=0
+Delegate=yes
+KillMode=process
+Restart=on-failure
+StartLimitBurst=3
+StartLimitInterval=60s
+ 
+[Install]
+WantedBy=multi-user.target
+```
+
+添加执行权限
+
+```
+chmod +x /etc/systemd/system/docker.service
+```
+
+重新加载配置文件（每次有修改docker.service文件时都要重新加载下）
+
+```
+systemctl daemon-reload
+```
+
+#### 启动docker
+
+```
 systemctl start docker.service
 systemctl enable docker.service
 
 systemctl status docker
 ```
+
+
 
 ---
 

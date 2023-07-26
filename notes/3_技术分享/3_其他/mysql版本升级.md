@@ -37,18 +37,20 @@ exit
 
 ```shell
 # 查看数据库目录
-ls cat my.cnf | grep datadir
+cat my.cnf | grep datadir
 # 打包压缩数据库文件
 tar -zcvf mysql_data.tar.gz /var/lib/mysql
 ```
 
 #### 升级
 
-docker 部署新的 mysql
+##### 1.docker 部署新的 mysql
 
 ```shell
 docker pull mysql:5.7.42
 ```
+
+配置文件 和 数据库目录挂载 旧mysql的
 
 ```shell
 docker run --name=mysql-5.7.42 \
@@ -61,6 +63,8 @@ docker run --name=mysql-5.7.42 \
 
 进入容器中运行mysql_upgrade 检查并升级 MySQL 表
 
+错误[The mysql.session exists but is not correctly configured](https://blog.csdn.net/lwei_998/article/details/80119023)
+
 ```shell
 # 出现提示时，输入旧 MySQL 5.6 服务器的 root 密码。
 docker exec -it mysql-5.7.42 mysql_upgrade -uroot -p
@@ -71,6 +75,29 @@ docker exec -it mysql-5.7.42 mysql_upgrade -uroot -p
 ```
 docker restart mysql-5.7.42
 ```
+
+##### 2.二进制安装新的mysql
+
+二进制下载地址 https://downloads.mysql.com/archives/community/
+
+```
+groupadd mysql
+useradd -r -g mysql -s /bin/false mysql
+cd /usr/local
+tar zxvf /path/to/mysql-VERSION-OS.tar.gz
+ln -s full-path-to-mysql-VERSION-OS mysql
+cd mysql
+mkdir mysql-files
+chown mysql:mysql mysql-files
+chmod 750 mysql-files
+bin/mysqld --initialize --user=mysql
+bin/mysql_ssl_rsa_setup
+bin/mysqld_safe --user=mysql &
+# Next command is optional
+$> cp support-files/mysql.server /etc/init.d/mysql.server
+```
+
+
 
 #### 参考文章
 
