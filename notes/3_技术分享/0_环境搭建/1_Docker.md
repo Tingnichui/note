@@ -18,6 +18,24 @@ systemctl status docker
 
 ---
 
+# docker镜像导出导入
+
+https://blog.csdn.net/q_hsolucky/article/details/122717206
+
+镜像打包
+
+```
+docker save -o mysql_5.7.42.tar mysql:5.7.42
+```
+
+载入镜像包
+
+```
+docker load -i mysql_5.7.42.tar
+```
+
+---
+
 # docker network
 
 [docker network详解、教程](https://blog.csdn.net/wangyue23com/article/details/111172076) 
@@ -75,25 +93,41 @@ docker load -i ~/container-backup.tar
 
 [ERROR 1045 (28000): Access denied for user 'mysql'@'localhost' (using password: YES)解决方法 ](http://t.csdn.cn/KAAUN)
 
-```bash
 拉取mysql
-docker pull mysql:latest
+
+```
+docker pull mysql:8.0.34
 docker pull mysql:5.7.42
+```
 
-运行一个mysql
-docker run --network tingnichui --network-alias mysql --restart=always -d -p 3306:3306 --name mysql -v /home/mysql/log:/var/log/mysql  -v /home/mysql/data:/var/lib/mysql  -v /home/mysql/conf:/etc/mysql/conf.d -e TZ=Asia/Shanghai  -e MYSQL_ROOT_PASSWORD=password mysql --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+运行容器
 
-进入容器查看一下是否正常运行
+```shell
+docker run --name mysql \
+    --network tingnichui \
+    --network-alias mysql \
+    --restart=always \
+    -p 3306:3306 \
+    -v /home/mysql/log:/var/log/mysql  \
+    -v /home/mysql/data:/var/lib/mysql  \
+    -v /home/mysql/conf:/etc/mysql/conf.d \
+    -e TZ=Asia/Shanghai  \
+    -e MYSQL_ROOT_PASSWORD=password  \
+    --character-set-server=utf8mb4 \
+    --collation-server=utf8mb4_general_ci \
+    -d mysql:8.0.34
+```
+
+进入容器
+
+```shell
 docker exec -it mysql bash
 mysql -uroot -ppassword
+```
 
-查看防火墙
-firewall-cmd --state
-关闭
-systemctl stop firewalld.service
-禁止开机启动
-systemctl disable firewalld.service
 
+
+```bash
 连接异常 2059 - authentication plugin ‘caching_sha2_password
 先查看一下加密的方式
 show variables like 'default_authentication_plugin';
@@ -118,7 +152,18 @@ mkdir /home/redis
 
 上传redis.connf 到 /home/redis 下
 
-docker run --network tingnichui --network-alias redis --restart=always --log-opt max-size=100m --log-opt max-file=2 -p 6379:6379 --name redis -v /home/redis/redis.conf:/etc/redis/redis.conf -v /home/redis/data:/data -d redis redis-server /etc/redis/redis.conf  --appendonly yes  --requirepass password
+docker run --name redis \
+    --network tingnichui \
+    --network-alias redis \
+    --restart always \
+    --log-opt max-size=100m \
+    --log-opt max-file=2 \
+    --appendonly yes \
+    -p 6379:6379 \
+    -v /home/redis/redis.conf:/etc/redis/redis.conf \
+    -v /home/redis/data:/data \
+    -e REDIS_PASSWORD=password \
+    -d redis redis-server /etc/redis/redis.conf 
 
 
 进入容器查看一下
@@ -132,7 +177,7 @@ redis.conf
 ```bash
 # bind 192.168.1.100 10.0.0.1
 # bind 127.0.0.1 ::1
-#bind 127.0.0.1
+# bind 127.0.0.1
 
 protected-mode no
 
@@ -286,6 +331,22 @@ docker rm -f nginx
 docker run --network tingnichui --network-alias nginx --restart=always -e TZ=Asia/Shanghai -p 80:80 -p 443:443 --name nginx -v /home/nginx/conf/nginx.conf:/etc/nginx/nginx.conf -v /home/nginx/conf/conf.d:/etc/nginx/conf.d -v /home/nginx/log:/var/log/nginx -v /home/nginx/html:/usr/share/nginx/html -v /home/nginx/certs:/etc/nginx/certs -d nginx
 ```
 
+```shell
+docker run -d --name nginx \
+    --network tingnichui \
+    --network-alias nginx \
+    --restart always \
+    -e TZ=Asia/Shanghai \
+    -p 80:80 \
+    -p 443:443 \
+    -v /home/nginx/conf/nginx.conf:/etc/nginx/nginx.conf \
+    -v /home/nginx/conf/conf.d:/etc/nginx/conf.d \
+    -v /home/nginx/log:/var/log/nginx \
+    -v /home/nginx/html:/usr/share/nginx/html \
+    -v /home/nginx/certs:/etc/nginx/certs \
+    nginx
+```
+
 集群
 
 [Nginx构建高可用集群，实现负载均衡应对高并发](https://cloud.tencent.com/developer/article/1853648?from=15425&areaSource=102001.1&traceId=FQyS1K1p5v9QWaq3v5z2-) 
@@ -327,7 +388,20 @@ docker exec -it rabbitmq /bin/bash
 rabbitmq-plugins enable rabbitmq_management
 ```
 
-
+```
+docker run -d --name rabbitmq \
+    --network tingnichui \
+    --network-alias rabbitmq \
+    --restart always \
+    -e TIME_ZONE='Asia/Shanghai' \
+    -e vm_memory_high_watermark=128m \
+    --hostname tingnichui \
+    -e RABBITMQ_DEFAULT_USER=root \
+    -e RABBITMQ_DEFAULT_PASS=chunhui \
+    -p 15672:15672 \
+    -p 5672:5672 \
+    rabbitmq
+```
 
 # Sentinel
 
@@ -335,7 +409,15 @@ rabbitmq-plugins enable rabbitmq_management
 docker run --name sentinel --restart=always --network tingnichui  --network-alias sentinel -p 8858:8858 -e AUTH_PASSWORD=chunhui -d  bladex/sentinel-dashboard
 ```
 
-
+```
+docker run -d --name sentinel \
+    --restart always \
+    --network tingnichui \
+    --network-alias sentinel \
+    -p 8858:8858 \
+    -e AUTH_PASSWORD=chunhui \
+    bladex/sentinel-dashboard
+```
 
 # ELK(未成功)
 
@@ -414,6 +496,20 @@ chmod 777 /home/jenkins/jenkins_home
 # 创建容器
 docker pull jenkins/jenkins:latest
 docker run -d -u root -m 1000m -p 8080:8080 -p 50000:50000 -v /jenkins/jenkins_home:/var/jenkins_home -v /usr/bin/docker:/usr/bin/docker -v /var/run/docker.sock:/var/run/docker.sock -e TIME_ZONE='Asia/Shanghai' --restart always --name jenkins jenkins/jenkins
+
+docker run -d 
+	-u root \
+	-m 1000m \
+	-p 8080:8080 \
+	-p 50000:50000 \
+    -v /jenkins/jenkins_home:/var/jenkins_home \
+    -v /usr/bin/docker:/usr/bin/docker \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -e TIME_ZONE='Asia/Shanghai' \
+    --restart always \
+    --name jenkins \
+    jenkins/jenkins
+
 
 # 修改源
 cd /home/jenkins/jenkins_home/
@@ -503,13 +599,21 @@ docker pull snowdreamtech/frps
 
 # --network host 貌似只能用host，不然腾讯云不会穿透端口
 docker run -d -m 100m --network host -v /home/frp/frps.ini:/etc/frp/frps.ini --name frps --restart always snowdreamtech/frps
+
+docker run -d \
+	-m 100m \
+	--network host \
+    -v /home/frp/frps.ini:/etc/frp/frps.ini \
+    --name frps \
+    --restart always \
+    snowdreamtech/frps
 ```
 
 #### 客户端部署frpc
 
  docker部署frpc
 
-```
+```shell
 mkdir -p /home/frp && cd /home/frp
 
 vim frpc.ini
@@ -525,6 +629,13 @@ token = chunhui
 docker pull snowdreamtech/frpc
 
 docker run -d -m 100m --restart always --network host --name frpc -v /home/frp/frpc.ini:/etc/frp/frpc.ini snowdreamtech/frpc
+
+docker run -d -m 100m \
+	--restart always \
+	--network host \
+    --name frpc \
+    -v /home/frp/frpc.ini:/etc/frp/frpc.ini \
+    snowdreamtech/frpc
 
 ```
 
