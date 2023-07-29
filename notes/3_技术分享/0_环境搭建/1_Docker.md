@@ -98,8 +98,6 @@ systemctl enable docker.service
 systemctl status docker
 ```
 
-
-
 ---
 
 # docker镜像导出导入
@@ -231,34 +229,12 @@ exit #退出MySQL
 
 ```bash
 docker pull redis
-
 mkdir /home/redis
-
-上传redis.connf 到 /home/redis 下
-
-docker run --name redis \
-    --network tingnichui \
-    --network-alias redis \
-    --restart always \
-    --log-opt max-size=100m \
-    --log-opt max-file=2 \
-    --appendonly yes \
-    -p 6379:6379 \
-    -v /home/redis/redis.conf:/etc/redis/redis.conf \
-    -v /home/redis/data:/data \
-    -e REDIS_PASSWORD=password \
-    -d redis redis-server /etc/redis/redis.conf 
-
-
-进入容器查看一下
-docker exec -it redis redis-cli
-auth password
-config get requirepass
 ```
 
-redis.conf
+创建并上传redis.conf 到 /home/redis 下
 
-```bash
+```shell
 # bind 192.168.1.100 10.0.0.1
 # bind 127.0.0.1 ::1
 # bind 127.0.0.1
@@ -365,7 +341,30 @@ aof-rewrite-incremental-fsync yes
 rdb-save-incremental-fsync yes
 ```
 
+运行容器
 
+```shell
+docker run -d --name redis \
+    --network tingnichui \
+    --network-alias redis \
+    --restart always \
+    --log-opt max-size=100m \
+    --log-opt max-file=2 \
+    --appendonly yes \
+    -p 6379:6379 \
+    -v /home/redis/redis.conf:/etc/redis/redis.conf \
+    -v /home/redis/data:/data \
+    -e REDIS_PASSWORD=password \
+    redis redis-server /etc/redis/redis.conf 
+```
+
+进入容器查看一下
+
+```shell
+docker exec -it redis redis-cli
+auth password
+config get requirepass
+```
 
 # Nginx
 
@@ -467,12 +466,9 @@ docker pull rabbitmq
 docker run --network tingnichui --network-alias rabbitmq --restart=always -e TIME_ZONE='Asia/Shanghai' -e vm_memory_high_watermark=128m --hostname tingnichui  -e RABBITMQ_DEFAULT_USER=root -e RABBITMQ_DEFAULT_PASS=chunhui --name rabbitmq -p 15672:15672 -p 5672:5672 -d rabbitmq
 
 --memory=128m 这个命令可以限制占用内存
-
-docker exec -it rabbitmq /bin/bash
-rabbitmq-plugins enable rabbitmq_management
 ```
 
-```
+```shell
 docker run -d --name rabbitmq \
     --network tingnichui \
     --network-alias rabbitmq \
@@ -487,19 +483,24 @@ docker run -d --name rabbitmq \
     rabbitmq
 ```
 
+```shell
+docker exec -it rabbitmq /bin/bash
+rabbitmq-plugins enable rabbitmq_management
+```
+
 # Sentinel
 
 ```bash
 docker run --name sentinel --restart=always --network tingnichui  --network-alias sentinel -p 8858:8858 -e AUTH_PASSWORD=chunhui -d  bladex/sentinel-dashboard
 ```
 
-```
+```shell
 docker run -d --name sentinel \
     --restart always \
     --network tingnichui \
     --network-alias sentinel \
     -p 8858:8858 \
-    -e AUTH_PASSWORD=chunhui \
+    -e AUTH_PASSWORD=password \
     bladex/sentinel-dashboard
 ```
 
@@ -542,19 +543,15 @@ http.port: 9200
 docker run -it -d -p 9200:9200 -p 9300:9300 --name es -e ES_JAVA_OPTS="-Xms1g -Xmx1g" -e "discovery.type=single-node" --restart=always -v /home/elk/es/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml -v /home/elk/es/data:/usr/share/elasticsearch/data -v /home/elk/es/logs:/usr/share/elasticsearch/logs elasticsearch:8.4.3
 ```
 
-![点击并拖拽以移动](data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==)
 
-```bash
+
+```shell
 docker pull kibana:8.4.3
 ```
 
-![点击并拖拽以移动](data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==)
-
-```
+```shell
 docker pull logstash:8.4.3
 ```
-
-![点击并拖拽以移动](data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==)
 
 # Jenkins
 
@@ -811,7 +808,11 @@ https://blog.csdn.net/y393016244/article/details/126405864
 安装zk
 
 ```shell
-docker run -d --name zookeeper-server --network tingnichui -e ALLOW_ANONYMOUS_LOGIN=yes bitnami/zookeeper:latest
+docker run -d \
+    --name zookeeper-server \
+    --network tingnichui \
+    -e ALLOW_ANONYMOUS_LOGIN=yes \
+    bitnami/zookeeper:latest
 ```
 
 安装kafka
@@ -829,107 +830,62 @@ docker run -d --name kafka-server \
 安装kafka map
 
 ```shell
-docker run -d --name kafka-map --network tingnichui -p 8080:8080 -e DEFAULT_USERNAME=admin -e DEFAULT_PASSWORD=admin dushixiang/kafka-map:latest
-    
-    
--v /home/kafka-map/data:/usr/local/kafka-map/data \
+docker run -d \
+    --name kafka-map \
+    --network tingnichui \
+    -p 8080:8080 \
+    -e DEFAULT_USERNAME=admin \
+    -e DEFAULT_PASSWORD=admin \
+    dushixiang/kafka-map:latest
 ```
 
 #### 密码验证
 
 https://www.jianshu.com/p/9c1f9dea60ed
 
-
-
 https://blog.csdn.net/yztezhl/article/details/127627854
 
-kafka_server_jaas.conf
+zooeeper部署
 
-```
-mkdir -p /home/kafka/secrets
-```
-
-```
-KafkaServer {
-	org.apache.kafka.common.security.plain.PlainLoginModule required
-    username="admin"
-    password="admin"
-    user_admin="admin"
-    user_alice="admin";
-};
-Client {
-    org.apache.kafka.common.security.plain.PlainLoginModule required
-    username="admin"
-    password="admin";
-};
-```
-
-zk_server_jaas.conf
-
-```
-Server {
-    org.apache.zookeeper.server.auth.DigestLoginModule required
-    username="admin"
-    password="admin"
-    user_admin="admin";
-};
-```
-
-docker-compose.yml
+https://hub.docker.com/r/bitnami/zookeeper
 
 ```shell
-version: '2'
-services:
-    zookeeper:
-        image: confluentinc/cp-zookeeper:5.1.2
-        hostname: zookeeper
-        container_name: zookeeper
-        restart: always
-        ports:
-            - 2182:2182
-        environment:
-            ZOOKEEPER_CLIENT_PORT: 2182
-            ZOOKEEPER_TICK_TIME: 2000
-            ZOOKEEPER_MAXCLIENTCNXNS: 0
-            ZOOKEEPER_AUTHPROVIDER.1: org.apache.zookeeper.server.auth.DigestLoginModule
-            ZOOKEEPER_REQUIRECLIENTAUTHSCHEME: sasl
-            ZOOKEEPER_JAASLOGINRENEW: 3600000
-            KAFKA_OPTS: -Djava.security.auth.login.config=/etc/kafka/secrets/zk_server_jaas.conf
-        volumes:
-            - ./secrets:/etc/kafka/secrets
-    kafka:
-        image: confluentinc/cp-kafka:5.1.2
-        hostname: broker
-        container_name: kafka
-        restart: always
-        depends_on:
-            - zookeeper
-        ports:
-            - 9092:9092
-        environment:
-            KAFKA_BROKER_ID: 1
-            KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2182/kafka'
-            KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-            KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-            KAFKA_LISTENERS: SASL_PLAINTEXT://0.0.0.0:9092
-            KAFKA_ADVERTISED_LISTENERS: SASL_PLAINTEXT://192.168.139.102:9092
-            KAFKA_SECURITY_INTER_BROKER_PROTOCOL: SASL_PLAINTEXT
-            KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
-            KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
-            KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.auth.SimpleAclAuthorizer
-            KAFKA_OPTS: -Djava.security.auth.login.config=/etc/kafka/secrets/kafka_server_jaas.conf
-            KAFKA_SUPER_USERS: User:admin
-        volumes:
-            - ./secrets:/etc/kafka/secrets
+docker run -d --name zookeeper_sasl \
+    --network tingnichui \
+    -p 2181:2181 \
+	-e ZOO_ENABLE_AUTH=yes \
+    -e ZOO_SERVER_USERS=admin \
+    -e ZOO_SERVER_PASSWORDS=password \
+    -e ZOO_CLIENT_USER=admin \
+    -e ZOO_CLIENT_PASSWORD=password \
+    bitnami/zookeeper
 ```
 
 
 
 ```shell
-docker-compose -f docker-compose.yml up -d
+docker run -d --name kafka_sasl \
+	-p 9092:9092 \
+    --network tingnichui \
+    -e KAFKA_ZOOKEEPER_PROTOCOL=SASL \
+    -e KAFKA_ZOOKEEPER_USER=admin \
+    -e KAFKA_ZOOKEEPER_PASSWORD=password \
+    -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
+    -e ALLOW_PLAINTEXT_LISTENER=yes \
+    -e KAFKA_CFG_LISTENERS=PLAINTEXT://:9092，CONTROLLER://:9093 \
+    -e KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://:9092 \
+    -e KAFKA_CLIENT_USERS=user \
+    -e KAFKA_CLIENT_PASSWORDS=password \
+    -e KAFKA_CFG_SASL_MECHANISM_INTER_BROKER_PROTOCOL=PLAINTEXT \
+    -e KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT \
+	bitnami/kafka:3.5.1
 ```
+
+
 
 # logstash
+
+
 
 
 
@@ -1059,11 +1015,11 @@ docker run -d \
 curl -L https://github.com/docker/compose/releases/download/v2.5.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
 ```
 
-```
+```shell
 chmod +x /usr/local/bin/docker-compose
 ```
 
-```
+```shell
 docker-compose version
 ```
 
