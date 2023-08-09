@@ -93,6 +93,7 @@
       - [curl](/notes/3_技术分享/3_Linux/curl.md)
       - [iptables](/notes/3_技术分享/3_Linux/iptables.md)
       - [linux用户权限](/notes/3_技术分享/3_Linux/linux用户权限.md)
+      - [netcat（nc）](/notes/3_技术分享/3_Linux/netcat（nc）.md)
       - [route](/notes/3_技术分享/3_Linux/route.md)
       - [shell命令](/notes/3_技术分享/3_Linux/shell命令.md)
       - [wget](/notes/3_技术分享/3_Linux/wget.md)
