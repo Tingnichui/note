@@ -1,110 +1,138 @@
-iptables中的“四表五链”及“堵通策略”
+## IPTABLES 结构
 
-A.“四表”是指，iptables的功能——filter, nat, mangle, raw.
+iptables -> Tables -> Chains -> Rules
 
-filter, 控制数据包是否允许进出及转发（INPUT、OUTPUT、FORWARD）,可以控制的链路有input, forward, output
+![img](https://chunhui-a.oss-cn-nanjing.aliyuncs.com/typora/img/1583990-20221104162420859-2031091297.png)
 
-nat, 控制数据包中[地址转换](https://so.csdn.net/so/search?q=地址转换&spm=1001.2101.3001.7020)，可以控制的链路有prerouting, input, output, postrouting
+---
 
-mangle,修改数据包中的原数据，可以控制的链路有prerouting, input, forward, output, postrouting
+## IPTABLES 表与链
 
-raw,控制nat表中连接追踪机制的启用状况，可以控制的链路有prerouting, output
+> Filter, NAT, Mangle, Raw四种内建表
+>
+> 五种规则链名：
+>
+> - **INPUT链**：处理输入数据包。
+> - **OUTPUT链**：处理输出数据包。
+> - **PORWARD链**：处理转发数据包。
+> - **PREROUTING链**：用于目标地址转换（DNAT）。
+> - **POSTOUTING链**：用于源地址转换（SNAT）。
 
-注：在centos7中，还有security表，不过这里不作介绍
+1. **Filter表**：iptables的默认表，控制数据包是否允许进出及转发，包过滤，用于防火墙规则。
+   - **INPUT** – 处理来自外部的数据。
+   - **OUTPUT** – 处理向外发送的数据。
+   - **FORWARD** – 将数据转发到本机的其他网卡设备上。
+2. **NAT表**：控制数据包中地址转换，用于网关路由器。
+   - **PREROUTING** – 处理刚到达本机并在路由转发前的数据包。它会转换数据包中的目标IP地址（destination ip address），通常用于DNAT(destination NAT)。
+   - **POSTROUTING** – 处理即将离开本机的数据包。它会转换数据包中的源IP地址（source ip address），通常用于SNAT（source NAT）。
+   - **OUTPUT** – 处理本机产生的数据包。
+3. **Mangle表**：修改数据包中的原数据，数据包修改（QOS），用于实现服务质量。
+   - PREROUTING - 路由前
+   - OUTPUT - 数据包出口
+   - FORWARD - 转发管卡
+   - INPUT - 数据包流入口
+   - POSTROUTING - 路由后
+4. **Raw表**：用于处理异常，控制nat表中连接追踪机制的启用状况，高级功能，如：网址过滤。
+   - PREROUTING chain
+   - OUTPUT chain
 
-B.“五链”是指内核中控制网络的[NetFilter](https://so.csdn.net/so/search?q=NetFilter&spm=1001.2101.3001.7020)定义的五个规则链，分别为
+---
 
-PREROUTING, 路由前
+## IPTABLES 规则(Rules)
 
-INPUT, 数据包流入口
+> - Rules包括一个条件和一个目标(target)
+> - 如果满足条件，就执行目标(target)中的规则或者特定值
+> - 如果不满足条件，就判断下一条Rules
 
-FORWARD, 转发管卡
-
-OUTPUT, 数据包出口
-
-POSTROUTING, 路由后
-
-C.堵通策略是指对数据包所做的操作，一般有两种操作——“通（ACCEPT）”、“堵（DROP）”，还有一种操作很常见REJECT.
-
-谈谈REJECT和DROP之间的区别，Ming写了一封信，向Rose示爱。Rose如果不愿意接受，她可以不回应Ming,这个时候Ming不确定Rose是否接到了信；Rose也可以同样写一封信，在信中明确地拒绝Ming。前一种操作就如同执行了DROP操作，而后一种操作就如同REJECT操作。
-
-
-
-
-
-语法
+![image-20230809193152964](https://chunhui-a.oss-cn-nanjing.aliyuncs.com/typora/img/image-20230809193152964.png)
 
 ```shell
-iptables [-t table] COMMAND [chain] CRETIRIA -j ACTION
+# 不指定 -t 选项，就只会显示默认的 filter
+iptables -t filter --list --line-numbers
+iptables –list
+# 查看mangle表
+iptables -t mangle --list --line-numbers
+# 查看NAT表
+iptables -t nat --list --line-numbers
+# 查看RAW表
+iptables -t raw --list --line-numbers
 ```
 
--t table，是指操作的表，filter、nat、mangle或raw, 默认使用filter
+- num – 指定链中的规则编号
+- target – 前面提到的target的特殊值
+  - **ACCEPT** – 允许防火墙接收数据包
+  - **DROP** – 防火墙丢弃包
+  - **QUEUE** – 防火墙将数据包移交到用户空间
+  - **RETURN** – 防火墙停止执行当前链中的后续Rules，并返回到调用链(the calling chain)中。
+- prot – 协议：tcp, udp, icmp等
+- source – 数据包的源IP地址
+- destination – 数据包的目标IP地址
 
-COMMAND，子命令，定义对规则的管理
+---
 
-chain, 指明链路
+## 添加iptables规则
 
-CRETIRIA, 匹配的条件或标准
+> iptables程序建立的规则只会保存在内存中，需要根据服务器系统保存
 
-ACTION,操作动作
+![img](https://chunhui-a.oss-cn-nanjing.aliyuncs.com/typora/img/1583990-20221104162440107-421329904.png)
 
-链管理
+```
+iptables [-t 表] [操作命令] [链] [规则匹配器] [-j 目标动作]
+```
 
--N, --new-chain chain：新建一个自定义的规则链；
+| 表            | 说明                                               | 支持的链                        |
+| :------------ | :------------------------------------------------- | :------------------------------ |
+| raw           | 一般是为了不再让iptables对数据包进行跟踪，提高性能 | PREROUTING、OUTPUT              |
+| mangle        | 对数据包进行修改                                   | 五个链都可以                    |
+| nat           | 进行地址转换                                       | PREROUTING、OUTPUT、POSTROUTING |
+| filter(默认） | 对包进行过滤                                       | INPUT、FORWARD、OUTPUT          |
 
--X, --delete-chain [chain]：删除用户自定义的引用计数为0的空链；
+| 常用操作命令 | 说明                                                         |
+| :----------- | :----------------------------------------------------------- |
+| -A           | 在指定链尾部添加规则                                         |
+| -D           | 删除匹配的规则                                               |
+| -R           | 替换匹配的规则                                               |
+| -I           | 在指定位置插入规则(例：iptables -I INPUT 1 --dport 80 -j ACCEPT（将规则插入到filter表INPUT链中的第一位上）默认第一位 |
+| -L/S         | 列出指定链或所有链的规则                                     |
+| -F           | 删除指定链或所有链的规则                                     |
+| -N           | 创建用户自定义链[例：iptables -N allowed]                    |
+| -X           | 删除指定的用户自定义链                                       |
+| -P           | 为指定链设置默认规则策略，对自定义链不起作用                 |
+| -Z           | 将指定链或所有链的计数器清零                                 |
+| -E           | 更改自定义链的名称[例：iptables -E allowed disallowed]       |
+| -n           | ip地址和端口号以数字方式显示[例：iptables -nL]               |
 
--F, --flush [chain]：清空指定的规则链上的规则；
+| 常用规则匹配器        | 说明                                                         |
+| :-------------------- | :----------------------------------------------------------- |
+| -p tcp/udp/icmp/all   | 匹配协议，all会匹配所有协议                                  |
+| -s addr[/mask]        | 匹配源地址                                                   |
+| -d addr[/mask]        | 匹配目标地址                                                 |
+| --sport port1[:port2] | 匹配源端口(可指定连续的端口）                                |
+| --dport port1[:port2] | 匹配目的端口(可指定连续的端口）                              |
+| -o interface          | 匹配出口网卡，只适用FORWARD、POSTROUTING、OUTPUT(例：iptables -A FORWARD -o eth0) |
+| -i interface          | 匹配入口网卡，只使用PREROUTING、INPUT、FORWARD。             |
+| --icmp-type           | 匹配icmp类型（使用iptables -p icmp -h可查看可用的ICMP类型）  |
+| --tcp-flags mask comp | 匹配TCP标记，mask表示检查范围，comp表示匹配mask中的哪些标记。（例：iptables -A FORWARD -p tcp --tcp-flags ALL SYN，ACK -j ACCEPT 表示匹配SYN和ACK标记的数据包） |
 
--E, --rename-chain old-chain new-chain：重命名链；
+| 目标动作   | 说明                                                         |
+| :--------- | :----------------------------------------------------------- |
+| ACCEPT     | 允许数据包通过                                               |
+| DROP       | 丢弃数据包                                                   |
+| REJECT     | 丢弃数据包，并且将拒绝信息发送给发送方                       |
+| LOG        | 在/var/log/messages文件中记录日志信息，然后将数据包传递给下一条规则 |
+| MASQUERADE | IP伪装（NAT），用于ADSL                                      |
+| SNAT       | 源地址转换（在nat表上）例：iptables -t nat -A POSTROUTING -d 192.168.0.102 -j SNAT --to 192.168.0.1 |
+| DNAT       | 目标地址转换（在nat表上）例：iptables -t nat -A PREROUTING -d 202.202.202.2 -j DNAT --to-destination 192.168.0.102 |
+| REDIRECT   | 目标端口转换（在nat表上）例：iptables -t nat -D PREROUTING -p tcp --dport 8080 -i eth2.2 -j REDIRECT --to 80 |
+| MARK       | 将数据包打上标记;例：iptables -t mangle -A PREROUTING -s 192.168.1.3 -j MARK --set-mark 60 |
 
--Z, --zero [chain [rulenum]]：置零计数器；
+除去最后一个LOG，前3条规则匹配数据包后，该数据包不会再往下继续匹配了，所以编写的规则顺序极其关键。
 
--P, --policy chain target， 设置链路的默认策略
+## 其他
 
-规则管理
+**iptables -p tcp** : 表示使用 TCP协议
 
--A, --append chain rule-specification：追加新规则于指定链的尾部；
-
--I, --insert chain [rulenum] rule-specification：插入新规则于指定链的指定位置，默认为首部；
-
--R, --replace chain rulenum rule-specification：替换指定的规则为新的规则；
-
--D, --delete chain rulenum：根据规则编号删除规则；
-
-查看规则
-
--L, --list [chain]：列出规则；
-
--v, --verbose：详细信息；
-
--vv， -vvv 更加详细的信息
-　　-n, --numeric：数字格式显示主机地址和端口号；
-
--x, --exact：显示计数器的精确值；
-
-–line-numbers：列出规则时，显示其在链上的相应的编号；
-
--S, --list-rules [chain]：显示指定链的所有规则
-
-
-
-匹配条件
-
-通用匹配条件
-
-[!] -s, --source address[/mask][,…]：检查报文的源IP地址是否符合此处指定的范围，或是否等于此处给定的地址；
-
-[!] -d, --destination address[/mask][,…]：检查报文的目标IP地址是否符合此处指定的范围，或是否等于此处给定的地址；
-
-[!] -p, --protocol protocol：匹配报文中的协议，可用值tcp, udp, udplite, icmp, icmpv6,esp, ah, sctp, mh 或者 “all”, 亦可以数字格式指明协议；
-[!] -i, --in-interface name：限定报文仅能够从指定的接口流入；only for packets entering the INPUT, FORWARD and PREROUTING chains.
-
-[!] -o, --out-interface name：限定报文仅能够从指定的接口流出；for packets entering the FORWARD, OUTPUT and POSTROUTING chains.
-
-
-
-
+**iptables -m tcp**：表示使用TCP模块的扩展功能（tcp扩展模块提供了 --dport, --tcp-flags, --sync等功能）
 
 ```shell
 iptables -I INPUT -p tcp -m tcp --dport 5140 -m state --state ESTABLISHED  -j LOG --log-level 1 --log-prefix "mysql connect "
@@ -118,6 +146,9 @@ iptables -L --line-numbers | grep logstash
 
 参考文章
 
-1. [iptables命令使用详解](https://blog.csdn.net/Hell_potato777/article/details/126771293)
-2. https://blog.csdn.net/qq_40265822/article/details/124998123
+1. [iptables基础知识详解](https://blog.csdn.net/u011537073/article/details/82685586)
+2. [IPTABLES 详解](https://www.cnblogs.com/my-show-time/p/16858254.html)
+3. [iptables命令使用详解](https://blog.csdn.net/Hell_potato777/article/details/126771293)
+4. [iptables -m, -p 参数说明 ](https://www.cnblogs.com/miracle-luna/p/13718436.html)
+5. https://blog.csdn.net/qq_40265822/article/details/124998123
 
