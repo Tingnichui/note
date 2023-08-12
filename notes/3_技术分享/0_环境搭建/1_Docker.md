@@ -169,6 +169,13 @@ docker load -i ~/container-backup.tar
  docker update -m 600m --memory-swap 600m nacos
 ```
 
+# docker容器权限设置
+
+[docker容器权限设置--cap-add | --cap-drop | privileged ](https://www.cnblogs.com/davis12/p/14453690.html)
+
+- privileged，权限全开，不利于宿主机安全
+- cap-add/cap-drop，细粒度权限设置，需要什么开什么
+
 ---
 
 # MySQL
