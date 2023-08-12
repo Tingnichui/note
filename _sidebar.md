@@ -104,6 +104,7 @@
       - [MySql用户管理](/notes/3_技术分享/4_中间件/MySql用户管理.md)
       - [MySQL管理数据库连接数](/notes/3_技术分享/4_中间件/MySQL管理数据库连接数.md)
       - [redis恢复与备份](/notes/3_技术分享/4_中间件/redis恢复与备份.md)
+      - [zookeeperACL权限控制](/notes/3_技术分享/4_中间件/zookeeperACL权限控制.md)
       - [zookeeper命令](/notes/3_技术分享/4_中间件/zookeeper命令.md)
     - [其他](/notes/3_技术分享/99_其他/)
       - [centso根据端口查看进程服务](/notes/3_技术分享/99_其他/centso根据端口查看进程服务.md)

@@ -873,7 +873,7 @@ docker run -d \
 
 #### 密码验证---失败
 
-zooeeper部署
+zookeeper部署
 
 https://hub.docker.com/r/bitnami/zookeeper
 
@@ -886,12 +886,18 @@ docker run -d --name zookeeper \
     --network tingnichui \
     --network-alias zookeeper \
     -p 2181:2181 \
+	-e ZOO_SERVERS=0.0.0.0:2888:3888 \
 	-e ZOO_ENABLE_AUTH=yes \
     -e ZOO_SERVER_USERS=admin \
     -e ZOO_SERVER_PASSWORDS=password \
     -e ZOO_CLIENT_USER=admin \
     -e ZOO_CLIENT_PASSWORD=password \
     bitnami/zookeeper | xargs docker logs -f 
+```
+
+```
+addauth digest admin:password
+setAcl / auth:admin:cdrwa
 ```
 
 kafak
