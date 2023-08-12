@@ -178,6 +178,22 @@ docker load -i ~/container-backup.tar
 
 ---
 
+# docker-compose
+
+```shell
+curl -L https://github.com/docker/compose/releases/download/v2.5.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+```
+
+```shell
+chmod +x /usr/local/bin/docker-compose
+```
+
+```shell
+docker-compose version
+```
+
+---
+
 # MySQL
 
 [ERROR 1045 (28000): Access denied for user 'mysql'@'localhost' (using password: YES)解决方法 ](http://t.csdn.cn/KAAUN)
@@ -812,26 +828,34 @@ remote_port = 18389
 
 https://blog.csdn.net/y393016244/article/details/126405864
 
+```shell
+docker rm -f kafka zookeeper
+```
+
 安装zk
 
 ```shell
 docker run -d \
-    --name zookeeper-server \
+    --name zookeeper \
     --network tingnichui \
+    --network-alias zookeeper \
+	-p 2181:2181 \
     -e ALLOW_ANONYMOUS_LOGIN=yes \
-    bitnami/zookeeper:latest
+    bitnami/zookeeper:latest | xargs docker logs -f 
 ```
 
 安装kafka
 
+> ​    -e ALLOW_PLAINTEXT_LISTENER=yes 这个参数好像不需要 没找到有这个配置
+
 ```shell
-docker run -d --name kafka-server \
+docker run -d --name kafka \
     --network tingnichui \
+	--network-alias kafka \
     -p 9092:9092 \
-    -e ALLOW_PLAINTEXT_LISTENER=yes \
-    -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper-server:2181 \
+    -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
     -e KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://192.168.139.101:9092 \
-    bitnami/kafka:latest
+    bitnami/kafka:latest | xargs docker logs -f 
 ```
 
 安装kafka map
@@ -840,35 +864,62 @@ docker run -d --name kafka-server \
 docker run -d \
     --name kafka-map \
     --network tingnichui \
+	--network-alias kafka-map \
     -p 8080:8080 \
     -e DEFAULT_USERNAME=admin \
     -e DEFAULT_PASSWORD=admin \
-    dushixiang/kafka-map:latest
+    dushixiang/kafka-map:latest | xargs docker logs -f 
 ```
 
-#### 密码验证
-
-https://www.jianshu.com/p/9c1f9dea60ed
-
-https://blog.csdn.net/yztezhl/article/details/127627854
+#### 密码验证---失败
 
 zooeeper部署
 
 https://hub.docker.com/r/bitnami/zookeeper
 
 ```shell
-docker run -d --name zookeeper_sasl \
+docker pull bitnami/zookeeper:latest
+```
+
+```shell
+docker run -d --name zookeeper \
     --network tingnichui \
+    --network-alias zookeeper \
     -p 2181:2181 \
 	-e ZOO_ENABLE_AUTH=yes \
     -e ZOO_SERVER_USERS=admin \
     -e ZOO_SERVER_PASSWORDS=password \
     -e ZOO_CLIENT_USER=admin \
     -e ZOO_CLIENT_PASSWORD=password \
-    bitnami/zookeeper
+    bitnami/zookeeper | xargs docker logs -f 
 ```
 
+kafak
 
+https://hub.docker.com/r/bitnami/kafka
+
+```shell
+docker pull bitnami/kafka
+```
+
+kafka 连接 设置 SASL/Digest-MD5 的 zookeeper 
+
+```shell
+docker run -d --name kafka \
+    --network tingnichui \
+	--network-alias kafka \
+    -p 9092:9092 \
+	-e KAFKA_ZOOKEEPER_PROTOCOL=SASL \
+    -e KAFKA_ZOOKEEPER_USER=admin \
+    -e KAFKA_ZOOKEEPER_PASSWORD=password \
+    -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
+    -e ALLOW_PLAINTEXT_LISTENER=yes \
+    -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
+    -e KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://192.168.139.101:9092 \
+    bitnami/kafka:latest | xargs docker logs -f 
+```
+
+kafka设置sasl认证
 
 ```shell
 docker run -d --name kafka_sasl \
@@ -878,155 +929,46 @@ docker run -d --name kafka_sasl \
     -e KAFKA_ZOOKEEPER_USER=admin \
     -e KAFKA_ZOOKEEPER_PASSWORD=password \
     -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
-    -e ALLOW_PLAINTEXT_LISTENER=yes \
+    -e KAFKA_CLIENT_LISTENER_NAME=SASL_PLAINTEXT \
     -e KAFKA_CFG_LISTENERS=PLAINTEXT://:9092，CONTROLLER://:9093 \
     -e KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://:9092 \
     -e KAFKA_CLIENT_USERS=user \
     -e KAFKA_CLIENT_PASSWORDS=password \
-    -e KAFKA_CFG_SASL_MECHANISM_INTER_BROKER_PROTOCOL=PLAINTEXT \
+    -e KAFKA_CFG_SASL_MECHANISM_INTER_BROKER_PROTOCOL=SASL_PLAINTEXT \
     -e KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT \
-	bitnami/kafka:3.5.1
-```
-
-
-
-# logstash
-
-
-
-
-
-# Kafka 密码认证
-
-kafka_server_jaas.conf
-
-```
-KafkaServer {
-org.apache.kafka.common.security.plain.PlainLoginModule required
-    username="admin"
-    password="123456"
-    user_admin="admin"
-    user_alice="123456";
-};
-Client {
-    org.apache.kafka.common.security.plain.PlainLoginModule required
-    username="admin"
-    password="123456";
-};
-```
-
-zk_server_jaas.conf
-
-```
- Server {
-    org.apache.kafka.common.security.plain.PlainLoginModule required
-    username="admin"
-    password="123456"
-    user_admin="admin";
-};
-```
-
-docker-compose.yml
-
-```yaml
-version: '2'
-services:
-    zookeeper:
-        image: confluentinc/cp-zookeeper:5.1.2
-        hostname: zookeeper
-        container_name: zookeeper
-        ports:
-            - 2182:2182
-        environment:
-            ZOOKEEPER_CLIENT_PORT: 2182
-            ZOOKEEPER_TICK_TIME: 2000
-            ZOOKEEPER_MAXCLIENTCNXNS: 0
-            ZOOKEEPER_AUTHPROVIDER.1: org.apache.zookeeper.server.auth.SASLAuthenticationProvider
-            ZOOKEEPER_REQUIRECLIENTAUTHSCHEME: sasl
-            ZOOKEEPER_JAASLOGINRENEW: 3600000
-            KAFKA_OPTS: -Djava.security.auth.login.config=/etc/kafka/secrets/zk_server_jaas.conf
-        volumes:
-            - /home/kafka/secrets:/etc/kafka/secrets
-    kafka:
-        image: confluentinc/cp-kafka:5.1.2
-        hostname: broker
-        container_name: kafka
-        depends_on:
-            - zookeeper
-        ports:
-            - 9092:9092
-        environment:
-            KAFKA_BROKER_ID: 1
-            KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2182/kafka'
-            KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-            KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-            KAFKA_LISTENERS: SASL_PLAINTEXT://0.0.0.0:9092
-            KAFKA_ADVERTISED_LISTENERS: SASL_PLAINTEXT://192.168.139.101:9092
-            KAFKA_SECURITY_INTER_BROKER_PROTOCOL: SASL_PLAINTEXT
-            KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: PLAIN
-            KAFKA_SASL_ENABLED_MECHANISMS: PLAIN
-            KAFKA_AUTHORIZER_CLASS_NAME: kafka.security.auth.SimpleAclAuthorizer
-            KAFKA_OPTS: -Djava.security.auth.login.config=/etc/kafka/secrets/kafka_server_jaas.conf
-            KAFKA_SUPER_USERS: User:admin
-        volumes:
-            - /home/kafka/secrets:/etc/kafka/secrets
+	bitnami/kafka | xargs docker logs -f 
 ```
 
 ```shell
-docker-compose -f docker-compose.yml up -d
-```
-
-```shell
-docker run -d \
-    --name zookeeper \
-    -p 2182:2182 \
-    -e ZOOKEEPER_CLIENT_PORT=2182 \
-    -e ZOOKEEPER_TICK_TIME=2000 \
-    -e ZOOKEEPER_MAXCLIENTCNXNS=0 \
-    -e ZOOKEEPER_AUTHPROVIDER.1=org.apache.zookeeper.server.auth.SASLAuthenticationProvider \
-    -e ZOOKEEPER_REQUIRECLIENTAUTHSCHEME=sasl \
-    -e ZOOKEEPER_JAASLOGINRENEW=3600000 \
-    -e KAFKA_OPTS="-Djava.security.auth.login.config=/etc/kafka/secrets/zk_server_jaas.conf" \
-    -v /home/kafka/secrets:/etc/kafka/secrets \
-    confluentinc/cp-zookeeper:5.1.2
-```
-
-
-
-```shell
-docker run -d \
-    --name kafka \
+docker run -d --name kafka_sasl \
     -p 9092:9092 \
-    --link zookeeper:zookeeper \
-    -e KAFKA_BROKER_ID=1 \
-    -e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2182/kafka \
-    -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 \
-    -e KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS=0 \
-    -e KAFKA_LISTENERS=SASL_PLAINTEXT://0.0.0.0:9092 \
-    -e KAFKA_ADVERTISED_LISTENERS=SASL_PLAINTEXT://192.168.139.101:9092 \
-    -e KAFKA_SECURITY_INTER_BROKER_PROTOCOL=SASL_PLAINTEXT \
-    -e KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL=PLAIN \
-    -e KAFKA_SASL_ENABLED_MECHANISMS=PLAIN \
-    -e KAFKA_AUTHORIZER_CLASS_NAME=kafka.security.auth.SimpleAclAuthorizer \
-    -e KAFKA_OPTS="-Djava.security.auth.login.config=/etc/kafka/secrets/kafka_server_jaas.conf" \
-    -e KAFKA_SUPER_USERS=User:admin \
-    -v /home/kafka/secrets:/etc/kafka/secrets \
-    confluentinc/cp-kafka:5.1.2
+    --network tingnichui \
+    -e KAFKA_ZOOKEEPER_PROTOCOL=SASL \
+    -e KAFKA_ZOOKEEPER_USER=admin \
+    -e KAFKA_ZOOKEEPER_PASSWORD=password \
+    -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
+    -e KAFKA_CLIENT_LISTENER_NAME=SASL_PLAINTEXT \
+    -e KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,SASL_PLAINTEXT://:9093 \
+    -e KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092,SASL_PLAINTEXT://localhost:9093 \
+    -e KAFKA_CLIENT_USERS=user \
+    -e KAFKA_CLIENT_PASSWORDS=password \
+    -e KAFKA_CFG_SASL_MECHANISM_INTER_BROKER_PROTOCOL=SASL_PLAINTEXT \
+    -e KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,SASL_PLAINTEXT:SASL_PLAINTEXT \
+    bitnami/kafka | xargs docker logs -f 
 ```
 
 
 
-# docker-compose
+# ZooNavigator
 
 ```shell
-curl -L https://github.com/docker/compose/releases/download/v2.5.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+docker pull elkozmon/zoonavigator
 ```
 
 ```shell
-chmod +x /usr/local/bin/docker-compose
-```
-
-```shell
-docker-compose version
+docker run -d --name zoonavigator\
+    -p 9000:9000 \
+    -e HTTP_PORT=9000 \
+    elkozmon/zoonavigator:latest | xargs docker logs -f 
 ```
 
