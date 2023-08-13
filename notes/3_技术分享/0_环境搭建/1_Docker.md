@@ -949,9 +949,6 @@ docker run -d --name kafka_sasl \
 docker run -d --name kafka_sasl \
     -p 9092:9092 \
     --network tingnichui \
-    -e KAFKA_ZOOKEEPER_PROTOCOL=SASL \
-    -e KAFKA_ZOOKEEPER_USER=admin \
-    -e KAFKA_ZOOKEEPER_PASSWORD=password \
     -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
     -e KAFKA_CLIENT_LISTENER_NAME=SASL_PLAINTEXT \
     -e KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,SASL_PLAINTEXT://:9093 \
@@ -961,6 +958,49 @@ docker run -d --name kafka_sasl \
     -e KAFKA_CFG_SASL_MECHANISM_INTER_BROKER_PROTOCOL=SASL_PLAINTEXT \
     -e KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,SASL_PLAINTEXT:SASL_PLAINTEXT \
     bitnami/kafka | xargs docker logs -f 
+```
+
+https://zhuanlan.zhihu.com/p/586005021
+
+```yaml
+version: '3'
+
+services:
+  zookeeper:
+    image: 'bitnami/zookeeper:latest'
+    ports:
+      - '2181:2181'
+    environment:
+      - ZOO_ENABLE_AUTH=yes
+      - ZOO_SERVER_USERS=zookeeper
+      - ZOO_SERVER_PASSWORDS=zkpass
+      - ZOO_CLIENT_USER=zkclient
+      - ZOO_CLIENT_PASSWORD=zkpass
+  kafka:
+    image: 'bitnami/kafka:latest'
+    ports:
+      - '9093:9093'
+      - '9092:9092'
+    environment:
+      - ALLOW_PLAINTEXT_LISTENER=no
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_CFG_LISTENERS=INTERNAL://:9092,CLIENT://:9093,
+      - KAFKA_CFG_ADVERTISED_LISTENERS=INTERNAL://kafka:9092,CLIENT://localhost:9093
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:SASL_PLAINTEXT,CLIENT:SASL_PLAINTEXT
+      - KAFKA_CFG_SASL_MECHANISM_INTER_BROKER_PROTOCOL=PLAIN
+      # Client credentials
+      - KAFKA_CLIENT_USERS=client1
+      - KAFKA_CLIENT_PASSWORDS=pass1
+      # Interbroker credentials
+      - KAFKA_INTER_BROKER_USER=interbrokeruser
+      - KAFKA_INTER_BROKER_PASSWORD=interbrokerpass
+      # Zookeeper credentials
+      - KAFKA_ZOOKEEPER_PROTOCOL=SASL
+      - KAFKA_ZOOKEEPER_USER=zookeeper
+      - KAFKA_ZOOKEEPER_PASSWORD=zkpass
+    depends_on:
+      - zookeeper
 ```
 
 
