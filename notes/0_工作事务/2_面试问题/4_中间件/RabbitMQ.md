@@ -1,11 +1,3 @@
-## 概念
-
-> **消息中间件**：是利用**高效可靠的消息传递机制进行异步的数据传输，并基于数据通信进行分布式系统的集成**。通过提供消息队列模型和消息传递机制，可以在分布式环境下扩展进程间的通信。
-
-## RocketMQ
-
-## RabbitMQ
-
 ### 主要构成
 
 [超详细的RabbitMQ入门，看这篇就够了！](https://developer.aliyun.com/article/769883#slide-15) 
@@ -38,10 +30,8 @@
 
 ### 顺序消费
 
-## Kafka
-
 
 
 ## 参考
 
-[消息队列详解：ActiveMQ、RocketMQ、RabbitMQ、Kafka](https://www.dingsky.com/article/20.html)
+1. [消息队列详解：ActiveMQ、RocketMQ、RabbitMQ、Kafka](https://www.dingsky.com/article/20.html)

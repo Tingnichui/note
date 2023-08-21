@@ -199,3 +199,4 @@ ES 为了提高写入的能力这个过程是并发写的，同时为了解决�
 ## 参考文章
 
 1. [2万字详解，吃透 Elasticsearch](https://zhuanlan.zhihu.com/p/529387057)
+2. [ElasticSearch最全详细使用教程：入门、索引管理、映射详解](http://blog.itpub.net/29715045/viewspace-2653369/)
