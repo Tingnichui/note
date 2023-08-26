@@ -822,17 +822,11 @@ local_port = 3389
 remote_port = 18389
 ```
 
-# Kafka
+# zookeeper
+
+https://hub.docker.com/r/bitnami/zookeeper
 
 #### 不带密码认证
-
-https://blog.csdn.net/y393016244/article/details/126405864
-
-```shell
-docker rm -f kafka zookeeper
-```
-
-安装zk
 
 ```shell
 docker run -d \
@@ -844,49 +838,11 @@ docker run -d \
     bitnami/zookeeper:latest | xargs docker logs -f 
 ```
 
-安装kafka
-
-> ​    -e ALLOW_PLAINTEXT_LISTENER=yes 这个参数好像不需要 没找到有这个配置
-
-```shell
-docker run -d --name kafka \
-    --network tingnichui \
-	--network-alias kafka \
-    -p 9092:9092 \
-    -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
-    -e KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://192.168.139.101:9092 \
-    bitnami/kafka:latest | xargs docker logs -f 
-```
-
-安装kafka map
-
-```shell
-docker run -d \
-    --name kafka-map \
-    --network tingnichui \
-	--network-alias kafka-map \
-    -p 8080:8080 \
-    -e DEFAULT_USERNAME=admin \
-    -e DEFAULT_PASSWORD=admin \
-    dushixiang/kafka-map:latest | xargs docker logs -f 
-```
-
-#### 密码验证---失败
-
-zookeeper部署
-
-https://hub.docker.com/r/bitnami/zookeeper
-
-```shell
-docker pull bitnami/zookeeper:latest
-```
+#### 密码认证
 
 ```shell
 docker run -d --name zookeeper \
-    --network tingnichui \
-    --network-alias zookeeper \
     -p 2181:2181 \
-	-e ZOO_SERVERS=0.0.0.0:2888:3888 \
 	-e ZOO_ENABLE_AUTH=yes \
     -e ZOO_SERVER_USERS=admin \
     -e ZOO_SERVER_PASSWORDS=password \
@@ -895,46 +851,42 @@ docker run -d --name zookeeper \
     bitnami/zookeeper | xargs docker logs -f 
 ```
 
-```
-addauth digest admin:password
-setAcl / auth:admin:cdrwa
-```
-
-kafak
+# Kafka
 
 https://hub.docker.com/r/bitnami/kafka
 
-```shell
-docker pull bitnami/kafka
-```
+#### 不设置密码认证 
 
-kafka 连接 设置 SASL/Digest-MD5 的 zookeeper 
+连接不带密码认证的zookeeper
 
 ```shell
 docker run -d --name kafka \
     --network tingnichui \
 	--network-alias kafka \
     -p 9092:9092 \
-	-e KAFKA_ZOOKEEPER_PROTOCOL=SASL \
-    -e KAFKA_ZOOKEEPER_USER=admin \
-    -e KAFKA_ZOOKEEPER_PASSWORD=password \
-    -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
-    -e ALLOW_PLAINTEXT_LISTENER=yes \
     -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
     -e KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://192.168.139.101:9092 \
     bitnami/kafka:latest | xargs docker logs -f 
 ```
 
+#### 设置密码认证
+
+```
+addauth digest admin:password
+setAcl / auth:admin:cdrwa
+```
+
 kafka设置sasl认证
 
 ```shell
-docker run -d --name kafka_sasl \
+docker run -d --name kafka \
 	-p 9092:9092 \
-    --network tingnichui \
+    --link zookeeper \
     -e KAFKA_ZOOKEEPER_PROTOCOL=SASL \
     -e KAFKA_ZOOKEEPER_USER=admin \
     -e KAFKA_ZOOKEEPER_PASSWORD=password \
     -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
+    -e ALLOW_PLAINTEXT_LISTENER=yes \
     -e KAFKA_CLIENT_LISTENER_NAME=SASL_PLAINTEXT \
     -e KAFKA_CFG_LISTENERS=PLAINTEXT://:9092，CONTROLLER://:9093 \
     -e KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://:9092 \
@@ -960,50 +912,26 @@ docker run -d --name kafka_sasl \
     bitnami/kafka | xargs docker logs -f 
 ```
 
-https://zhuanlan.zhihu.com/p/586005021
-
-```yaml
-version: '3'
-
-services:
-  zookeeper:
-    image: 'bitnami/zookeeper:latest'
-    ports:
-      - '2181:2181'
-    environment:
-      - ZOO_ENABLE_AUTH=yes
-      - ZOO_SERVER_USERS=zookeeper
-      - ZOO_SERVER_PASSWORDS=zkpass
-      - ZOO_CLIENT_USER=zkclient
-      - ZOO_CLIENT_PASSWORD=zkpass
-  kafka:
-    image: 'bitnami/kafka:latest'
-    ports:
-      - '9093:9093'
-      - '9092:9092'
-    environment:
-      - ALLOW_PLAINTEXT_LISTENER=no
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_CFG_LISTENERS=INTERNAL://:9092,CLIENT://:9093,
-      - KAFKA_CFG_ADVERTISED_LISTENERS=INTERNAL://kafka:9092,CLIENT://localhost:9093
-      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
-      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:SASL_PLAINTEXT,CLIENT:SASL_PLAINTEXT
-      - KAFKA_CFG_SASL_MECHANISM_INTER_BROKER_PROTOCOL=PLAIN
-      # Client credentials
-      - KAFKA_CLIENT_USERS=client1
-      - KAFKA_CLIENT_PASSWORDS=pass1
-      # Interbroker credentials
-      - KAFKA_INTER_BROKER_USER=interbrokeruser
-      - KAFKA_INTER_BROKER_PASSWORD=interbrokerpass
-      # Zookeeper credentials
-      - KAFKA_ZOOKEEPER_PROTOCOL=SASL
-      - KAFKA_ZOOKEEPER_USER=zookeeper
-      - KAFKA_ZOOKEEPER_PASSWORD=zkpass
-    depends_on:
-      - zookeeper
+```shell
+docker run \
+    -d --name=kafka \
+    -p 9092:9092 \
+    --link zookeeper \
+    -e KAFKA_ZOOKEEPER_PROTOCOL=SASL \
+    -e KAFKA_ZOOKEEPER_USER=admin \
+    -e KAFKA_ZOOKEEPER_PASSWORD=password \
+    -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
+    -e KAFKA_CFG_LISTENERS=INTERNAL://:9093,CLIENT://:9092 \
+    -e KAFKA_CFG_ADVERTISED_LISTENERS=INTERNAL://127.0.0.1:9093,CLIENT://192.168.139.101:9092 \
+    -e KAFKA_CLIENT_USERS=user \
+    -e KAFKA_CLIENT_PASSWORDS=password \
+    -e KAFKA_CFG_SASL_MECHANISM_INTER_BROKER_PROTOCOL=PLAIN \
+    -e KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,CLIENT:SASL_PLAINTEXT \
+    -e KAFKA_CFG_INTER_BROKER_LISTENER_NAME=INTERNAL \
+    bitnami/kafka:latest  | xargs docker logs -f 
 ```
 
-
+https://zhuanlan.zhihu.com/p/586005021
 
 # ZooNavigator
 
@@ -1016,5 +944,20 @@ docker run -d --name zoonavigator\
     -p 9000:9000 \
     -e HTTP_PORT=9000 \
     elkozmon/zoonavigator:latest | xargs docker logs -f 
+```
+
+---
+
+# kafka-map
+
+```shell
+docker run -d \
+    --name kafka-map \
+    --network tingnichui \
+	--network-alias kafka-map \
+    -p 8080:8080 \
+    -e DEFAULT_USERNAME=admin \
+    -e DEFAULT_PASSWORD=admin \
+    dushixiang/kafka-map:latest | xargs docker logs -f 
 ```
 
