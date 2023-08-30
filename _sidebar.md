@@ -117,7 +117,7 @@
       - [禁用rm创建回收站](/notes/3_技术分享/3_Linux/禁用rm创建回收站.md)
     - [中间件](/notes/3_技术分享/4_中间件/)
       - [Docker](/notes/3_技术分享/4_中间件/Docker/)
-        - [docker迁移](/notes/3_技术分享/4_中间件/Docker/docker迁移.md)
+        - [docker迁移数据目录](/notes/3_技术分享/4_中间件/Docker/docker迁移数据目录.md)
         - [处理overlay2占用大量磁盘空间](/notes/3_技术分享/4_中间件/Docker/处理overlay2占用大量磁盘空间.md)
       - [MySQL](/notes/3_技术分享/4_中间件/MySQL/)
         - [mysql版本升级](/notes/3_技术分享/4_中间件/MySQL/mysql版本升级.md)
