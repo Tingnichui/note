@@ -532,3 +532,119 @@ chmod 755 /etc/rc.local
 1. [CentOS安装Nginx](https://blog.csdn.net/qq_33381971/article/details/123328191)
 
 ## Kafka
+
+## Elasticsearch
+
+下载并解压
+
+```shell
+curl -O https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.12.0-linux-x86_64.tar.gz
+```
+
+```shell
+tar -zxvf elasticsearch-7.12.0-linux-x86_64.tar.gz
+```
+
+修改elasticsearch.yml  中 data 和 logs 存储位置
+
+![image-20230907230927707](https://chunhui-a.oss-cn-nanjing.aliyuncs.com/typora/img/image-20230907230927707.png)
+
+修改后记得创建对应的文件夹
+
+```
+mkdir -p /home/tools/elasticsearch-7.12.0/data /home/tools/elasticsearch-7.12.0/logs
+```
+
+增加elastic用户
+
+```
+useradd elastic
+```
+
+```
+passwd elastic
+```
+
+修改es和data logs属主，因为我这里data和logs在es中所有我就一条命令就行
+
+```
+chown -R elastic:elastic elasticsearch-7.12.0
+```
+
+切换用户
+
+```
+su elastic
+```
+
+启动一下看看
+
+```
+./bin/elasticsearch
+```
+
+访问一下看看是否正常启动
+
+```
+curl 127.0.0.1:9200
+```
+
+后台启动
+
+```
+./bin/elasticsearch -d
+```
+
+参考文章
+
+1. https://pdai.tech/md/db/nosql-es/elasticsearch-x-install.html
+
+## Kibana
+
+下载 下载与ElasicSearch一致的版本。
+
+https://www.elastic.co/cn/downloads/kibana
+
+https://www.elastic.co/downloads/past-releases#kibana
+
+上传服务器后解压
+
+```
+tar -zxvf kibana-7.12.0-linux-x86_64.tar.gz
+```
+
+修改属主
+
+```
+chown -R elastic:elastic kibana-7.12.0-linux-x86_64
+```
+
+配置Kibana的远程访问
+
+```
+vi kibana-7.12.0-linux-x86_64/config/kibana.yml
+```
+
+![image-20230907234008922](https://chunhui-a.oss-cn-nanjing.aliyuncs.com/typora/img/image-20230907234008922.png)
+
+切换用户
+
+```
+su elastic
+```
+
+启动
+
+```
+./bin/kibana
+```
+
+后台启动
+
+```
+nohup ./bin/kibana &
+```
+
+参考文章
+
+1. https://pdai.tech/md/db/nosql-es/elasticsearch-x-install.html
