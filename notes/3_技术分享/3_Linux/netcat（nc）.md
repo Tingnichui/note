@@ -1,8 +1,10 @@
-##### 安装
+## 安装
 
 ```shell
 yum install nc -y
 ```
+
+## 命令
 
 ##### 常用参数
 
@@ -47,6 +49,6 @@ nc -vuz 192.168.139.101 3306
 nc -vz 192.168.139.101 3306
 ```
 
-##### 参考文章
+## 参考文章
 
 1. [nc命令用法举例](https://blog.csdn.net/GNNUXXL/article/details/122299540)

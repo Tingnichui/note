@@ -1,3 +1,19 @@
+## 安装
+
+查看是否安装，有的话就卸载`yum remove wget`
+
+```bash
+rpm -qa | grep 'wget'
+```
+
+下载安装
+
+```bash
+yum install -y wget
+```
+
+## 命令
+
 ```shell
 wget [参数选项] <URL地址>
 ```

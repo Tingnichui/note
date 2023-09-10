@@ -12,73 +12,7 @@ systemctl stop firewalld.service
 systemctl disable firewalld.service
 ```
 
-## wget
-
-查看是否安装，有的话就卸载`yum remove wget`
-
-```bash
-rpm -qa|grep 'wget'
-```
-
-下载安装
-
-```bash
-yum install -y wget
-```
-
-## vim
-
-0.更新yum
-
-```bash
-yum update
-```
-
-1.查看是否已经安装了vim
-
-```bash
-rpm -qa|grep vim
-```
-
-```bash
-# 如果有以下结果输出，则已经安装了vim
-vim-filesystem-7.4.160-4.el7.x86_64
-vim-minimal-7.4.160-4.el7.x86_64
-vim-enhanced-7.4.160-4.el7.x86_64
-vim-common-7.4.160-4.el7.x86_64
-```
-
-2.安装vim
-
-```
-yum -y install vim*
-```
-
-3.配置vim
-
-编辑配置文件
-
-```bash
-vim /etc/vimrc
-```
-
-写如以下配置
-
-```bash
-set nu          " 设置显示行号
-set showmode    " 设置在命令行界面最下面显示当前模式等
-set ruler       " 在右下角显示光标所在的行数等信息
-set autoindent  " 设置每次单击Enter键后，光标移动到下一行时与上一行的起始字符对齐
-syntax on       " 即设置语法检测，当编辑C或者Shell脚本时，关键字会用特殊颜色显示
-```
-
-参考文章
-
-1. [Centos7安装vim](https://blog.csdn.net/qq_39329994/article/details/121487148) 
-
 ---
-
-
 
 ## Java
 
@@ -132,8 +66,6 @@ java -version
 1. [centos7安装java(多种方式)](https://blog.csdn.net/m0_61035257/article/details/125705400) 
 
 ---
-
-
 
 ## MySQL
 
@@ -372,6 +304,8 @@ systemctl start mysqld
 3. [二进制安装MySQL和设置开机自启](https://blog.csdn.net/2303_76463788/article/details/129891916)
 4. [Centos7设置mysql开机自启](https://blog.csdn.net/weixin_43841151/article/details/127078463) 
 
+---
+
 ## Redis
 
 官网地址：https://redis.io/
@@ -468,6 +402,8 @@ systemctl start redis.service
 1. [Centos安装Redis](https://blog.csdn.net/qq_38584262/article/details/125773286)
 2. [Redis6设置自启动CentOS](https://blog.csdn.net/zwrlj527/article/details/113374863) 
 
+---
+
 ## Nginx
 
 ```bash
@@ -531,7 +467,7 @@ chmod 755 /etc/rc.local
 
 1. [CentOS安装Nginx](https://blog.csdn.net/qq_33381971/article/details/123328191)
 
-## Kafka
+---
 
 ## Elasticsearch
 
@@ -551,57 +487,75 @@ tar -zxvf elasticsearch-7.12.0-linux-x86_64.tar.gz
 
 修改后记得创建对应的文件夹
 
-```
+```shell
 mkdir -p /home/tools/elasticsearch-7.12.0/data /home/tools/elasticsearch-7.12.0/logs
 ```
 
 增加elastic用户
 
-```
+```shell
 useradd elastic
 ```
 
-```
+```shell
 passwd elastic
 ```
 
 修改es和data logs属主，因为我这里data和logs在es中所有我就一条命令就行
 
-```
+```shell
 chown -R elastic:elastic elasticsearch-7.12.0
 ```
 
 切换用户
 
-```
+```shell
 su elastic
 ```
 
 启动一下看看
 
-```
+```shell
 ./bin/elasticsearch
 ```
 
 访问一下看看是否正常启动
 
-```
+```shell
 curl 127.0.0.1:9200
 ```
 
 后台启动
 
-```
+```shell
 ./bin/elasticsearch -d
+```
+
+设置密码
+
+https://www.elastic.co/guide/en/elasticsearch/reference/7.12/security-minimal-setup.html
+
+elasticsearch.yml添加如下内容,并重启
+
+```yaml
+xpack.security.enabled: true
+xpack.license.self_generated.type: basic
+xpack.security.transport.ssl.enabled: true
+```
+
+执行设置用户名和密码的命令,这里需要为4个用户分别设置密码，elastic, kibana,logstash_system,beats_system
+
+```shell
+bin/elasticsearch-setup-passwords interactive
 ```
 
 参考文章
 
-1. https://pdai.tech/md/db/nosql-es/elasticsearch-x-install.html
+1. [ES详解 - 安装：ElasticSearch和Kibana安装](https://pdai.tech/md/db/nosql-es/elasticsearch-x-install.html)
 
 ## Kibana
 
-下载 下载与ElasicSearch一致的版本。
+下载与ElasicSearch一致的版本。
 
 https://www.elastic.co/cn/downloads/kibana
 
@@ -609,42 +563,64 @@ https://www.elastic.co/downloads/past-releases#kibana
 
 上传服务器后解压
 
-```
+```shell
 tar -zxvf kibana-7.12.0-linux-x86_64.tar.gz
 ```
 
 修改属主
 
-```
+```shell
 chown -R elastic:elastic kibana-7.12.0-linux-x86_64
 ```
 
 配置Kibana的远程访问
 
-```
+```shell
 vi kibana-7.12.0-linux-x86_64/config/kibana.yml
 ```
 
 ![image-20230907234008922](https://chunhui-a.oss-cn-nanjing.aliyuncs.com/typora/img/image-20230907234008922.png)
 
+设置中文
+
+![image-20230909145918502](https://chunhui-a.oss-cn-nanjing.aliyuncs.com/typora/img/image-20230909145918502.png)
+
 切换用户
 
-```
+```shell
 su elastic
 ```
 
 启动
 
-```
+```shell
 ./bin/kibana
 ```
 
 后台启动
 
-```
+```shell
 nohup ./bin/kibana &
+```
+
+配置 Kibana 使用密碼連接到 Elasticsearch
+
+https://www.elastic.co/guide/en/elasticsearch/reference/7.12/security-minimal-setup.html
+
+kibana.yml追加登录账户名
+
+```yaml
+elasticsearch.username: "kibana_system"
+```
+
+```shell
+./bin/kibana-keystore create
+```
+
+```
+./bin/kibana-keystore add elasticsearch.password
 ```
 
 参考文章
 
-1. https://pdai.tech/md/db/nosql-es/elasticsearch-x-install.html
+1. [ES详解 - 安装：ElasticSearch和Kibana安装](https://pdai.tech/md/db/nosql-es/elasticsearch-x-install.html)
