@@ -519,6 +519,19 @@ su elastic
 ./bin/elasticsearch
 ```
 
+出现以下错误
+
+![image-20230912112402739](https://chunhui-a.oss-cn-nanjing.aliyuncs.com/typora/img/image-20230912112402739.png)
+
+```
+vi /etc/security/limits.conf
+
+elastic soft nofile 65536
+elastic hard nofile 65536
+elastic soft nproc 4096
+elastic hard nproc 4096
+```
+
 访问一下看看是否正常启动
 
 ```shell
