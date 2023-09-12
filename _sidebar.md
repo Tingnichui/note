@@ -136,6 +136,7 @@
       - [MySQL](/notes/3_技术分享/4_中间件/MySQL/)
         - [B+树](/notes/3_技术分享/4_中间件/MySQL/B+树.md)
         - [MVCC](/notes/3_技术分享/4_中间件/MySQL/MVCC.md)
+        - [mysqldump](/notes/3_技术分享/4_中间件/MySQL/mysqldump.md)
         - [mysql版本升级](/notes/3_技术分享/4_中间件/MySQL/mysql版本升级.md)
         - [MySql用户管理](/notes/3_技术分享/4_中间件/MySQL/MySql用户管理.md)
         - [MySQL管理数据库连接数](/notes/3_技术分享/4_中间件/MySQL/MySQL管理数据库连接数.md)

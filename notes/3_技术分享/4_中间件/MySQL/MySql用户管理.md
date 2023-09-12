@@ -41,6 +41,7 @@ DROP USER 'kangshifu'@'localhost';
 ```mysql
 # 修改当前用户的密码：（MySQL5.7测试有效）select version(); 
 SET PASSWORD = PASSWORD('123456');
+FLUSH PRIVILEGES;
 ```
 
 ##### 修改其他它用户密码
@@ -49,7 +50,7 @@ SET PASSWORD = PASSWORD('123456');
 ALTER USER user [IDENTIFIED BY '新密码'] 
 [,user[IDENTIFIED BY '新密码']]…;
 
-ALTER USER '<username>' IDENTIFIED BY '<new_password>'; # 默认删除host为%的用户
+ALTER USER '<username>' IDENTIFIED BY '<new_password>'; # 默认设置host为%的用户
 ALTER USER '<username>'@'localhost' IDENTIFIED BY '<new_password>';
 ```
 

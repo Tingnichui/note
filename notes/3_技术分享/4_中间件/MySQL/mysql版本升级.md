@@ -25,8 +25,15 @@ mysql --version
 #### 全量备份
 
 ```mysql
-mysqldump -uroot -p --quick --add-drop-table --routines --events --all-databases --flush-logs --single-transaction --force > /home/backup/mysql/alldata.sql
+mysqldump -uroot -p --all-databases --routines --events --flush-logs --single-transaction --quick --force > alldata.sql
 ```
+
+- --single-transaction 保证导出的一致性状态 导出大表的话，应结合使用--quick 选项。
+- --quick  不缓冲查询，直接导出到标准输出。默认为打开状态，使用--skip-quick取消该选项。
+- --flush-logs 开始导出之前刷新日志。
+- --routines, -R 导出存储过程以及自定义函数
+- --force 在导出过程中忽略出现的SQL错误
+- --events, -E 导出事件
 
 #### 关闭mysql
 
