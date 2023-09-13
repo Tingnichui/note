@@ -24,6 +24,19 @@ mysqldump -uroot -p --databases db1 db2 >/tmp/user.sql
 mysql -e "show databases;" -uroot -p| grep -Ev "Database|information_schema|mysql|test" | xargs mysqldump -uroot -p --databases > mysql_dump.sql
 ```
 
+#### 不同的名称导出并还原mysql数据库
+
+```
+# 导出
+mysqldump -uwxrcgy -pwxrcgy --single-transaction --quick --flush-logs --verbose --skip-add-drop-database --databases wx-rcgy | sed '/^USE /d' > wxrcgy.sql
+# 恢复 方式一
+mysql -uwxrcgy  -pwxrcgy  wx-rcgy2 <  wxrcgy.sql
+# 恢复方式二
+mysql -uwxrcgy  -pwxrcgy;
+use wx-rcgy2;
+source /home/wxrcgy.sql;
+```
+
 #### 导出db1中的a1、a2表
 
 注意导出指定表只能针对一个数据库进行导出，且导出的内容中和导出数据库也不一样，导出指定表的导出文本中没有创建数据库的判断语句，只有删除表-创建表-导入数据
@@ -62,10 +75,10 @@ mysqldump -uroot -proot --databases db1 -F >/tmp/db1.sql
 mysqldump -uroot -proot --no-data --databases db1 >/tmp/db1.sql
 ```
 
-跨服务器导出导入数据
+#### 跨服务器导出导入数据
 
 ```
-mysqldump --host=h1 -uroot -proot --databases db1 |mysql --host=h2 -uroot -proot db2
+mysqldump --host=h1 -uroot -proot --databases db1 | mysql --host=h2 -uroot -proot db2
 ```
 
 将h1服务器中的db1数据库的所有数据导入到h2中的db2数据库中，db2的数据库必须存在否则会报错
