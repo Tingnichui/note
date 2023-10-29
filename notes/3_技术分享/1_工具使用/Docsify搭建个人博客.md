@@ -575,8 +575,22 @@ public class util {
 
 
 
-文章
+# CDN加速
+
+1.进入[官网](https://www.cloudflare.com/zh-cn/)注册账号
+
+2.添加你的网址，主要添加你得主域名而不是子域名，我这里填写时tingnichui.com，添加之后选择免费套餐
+
+![image-20231029234200829](https://chunhui-a.oss-cn-nanjing.aliyuncs.com/typora/img/image-20231029234200829.png)
+
+![image-20231029234526693](https://chunhui-a.oss-cn-nanjing.aliyuncs.com/typora/img/image-20231029234526693.png)
+
+3.下面的我不会了，好像有点麻烦
+
+# 参考文章
 
 1. [Github+docsify零成本轻松打造在线文档网站](https://cloud.tencent.com/developer/news/675461)
 
 2. [Github pages 绑定个人域名](https://segmentfault.com/a/1190000011203711)
+
+3. [cloudflare使用入门教程，国外最好免费CDN](https://zhuanlan.zhihu.com/p/82909515)

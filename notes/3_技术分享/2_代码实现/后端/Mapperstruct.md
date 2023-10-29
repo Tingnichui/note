@@ -1,4 +1,4 @@
-```
+```java
 package com.xxx.xxxx.convert;
 
 import cn.hutool.core.util.StrUtil;
@@ -27,13 +27,12 @@ public class TypeConvert {
         }
         return JSON.parseArray(jsonStr, String.class);
     }
-
 }
 ```
 
 
 
-```
+```java
 @Mapper(uses = TypeConvert.class)
 public interface QbxxPublicationFileConvert {
 
