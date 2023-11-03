@@ -1,26 +1,40 @@
 # Docker 安装
 
-### 移除残留docker安装
+### 移除残留docker
 
 ```
 sudo yum remove docker \ docker-client \ docker-client-latest \docker-common \docker-latest \docker-latest-logrotate \docker-logrotate \ocker-engine
 ```
 
-### xxxxxxxxxx docker-compose versionshell
+### 开始安装
 
 ##### 1.yum安装
 
-安装yum工具 添加镜像站点
+安装yum工具
 
 ```
 yum install -y yum-utils
+```
+
+添加镜像站点
+
+```
 yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+```
+
+安装 Docker 所需的一些依赖包：
+
+```
+sudo yum install -y yum-utils device-mapper-persistent-data lvm2
 ```
 
 安装docker
 
 ```shell
+// 这个是安装老版本的
 yum install -y docker
+// 这个是安装最新社区版本 推荐用这个
+yum install docker-ce docker-ce-cli containerd.io
 ```
 
 查看是否安装成功
@@ -93,7 +107,13 @@ systemctl daemon-reload
 
 ```shell
 systemctl start docker.service
-systemctl enable docker.service
+```
 
+```
+systemctl enable docker.service
+```
+
+```
 systemctl status docker
 ```
+

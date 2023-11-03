@@ -54,6 +54,12 @@ exit #退出MySQL
 
 [史上最详细Docker安装Redis （含每一步的图解）实战](https://blog.csdn.net/weixin_45821811/article/details/116211724?ops_request_misc=&request_id=&biz_id=102&utm_term=docker%20%E5%AE%89%E8%A3%85redis&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduweb~default-0-116211724.nonecase&spm=1018.2226.3001.4187) 
 
+```
+docker run -d --name redis -p 6379:6379 redis --requirepass asiainfo5G
+```
+
+
+
 ```bash
 docker pull redis
 mkdir /home/redis
@@ -763,5 +769,36 @@ docker run -d \
     -e DEFAULT_USERNAME=admin \
     -e DEFAULT_PASSWORD=admin \
     dushixiang/kafka-map:latest | xargs docker logs -f 
+```
+
+---
+
+# minio
+
+https://blog.csdn.net/BThinker/article/details/125412751
+
+```
+docker run -p 9000:9000 -p 9001:9001 \
+     --name minio \
+     -d --restart=always \
+     -e "MINIO_ACCESS_KEY=aS8LytBsR8Nfkw8v" \
+     -e "MINIO_SECRET_KEY=GkWfbLb9iPRKHaMrP5PddlHVDhTmBQk9" \
+     minio/minio:RELEASE.2022-10-15T19-57-03Z
+```
+
+```
+docker run -p 9001:9000 -p 9000:9001 \
+    --name minio \
+    -d --restart=always \
+    -e "MINIO_ACCESS_KEY=aS8LytBsR8Nfkw8v" \
+    -e "MINIO_SECRET_KEY=GkWfbLb9iPRKHaMrP5PddlHVDhTmBQk9" \
+    minio/minio:RELEASE.2022-10-15T19-57-03Z server /data --console-address ":9001"
+```
+
+```
+docker run -p 9000:9000 -p 9001:9001 \
+    --name minio \
+    -d --restart=always \
+    minio/minio:RELEASE.2022-10-15T19-57-03Z server /data --console-address ":9001"
 ```
 
