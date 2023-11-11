@@ -8,6 +8,10 @@ show full processlist;
 select * from information_schema.processlist order by id;
 ```
 
+```
+select CONCAT('kill ',id,';') from information_schema.processlist order by id;
+```
+
 information_schema.processlist 表中的数据与`SHOW FULL PROCESSLIST`命令的输出结果相同。
 
 ![image-20230716143406109](https://chunhui-a.oss-cn-nanjing.aliyuncs.com/typora/img/image-20230716143406109.png)
