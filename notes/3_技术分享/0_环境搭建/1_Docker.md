@@ -491,6 +491,8 @@ https://gitee.com/hankinsli/natserver
 
 [使用frp进行内网穿透，实现ssh远程访问Linux](https://blog.csdn.net/qq_44577070/article/details/121893406?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522167292486616800215010194%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=167292486616800215010194&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~sobaiduend~default-1-121893406-null-null.142^v70^one_line,201^v4^add_ask&utm_term=frps%20ssh&spm=1018.2226.3001.4187) 
 
+文档：https://gofrp.org/zh-cn/
+
 #### 服务端部署frps
 
 docker 部署frps
@@ -512,7 +514,9 @@ dashboard_pwd = chunhui
 docker pull snowdreamtech/frps
 
 # --network host 貌似只能用host，不然腾讯云不会穿透端口
-docker run -d -m 100m --network host -v /home/frp/frps.ini:/etc/frp/frps.ini --name frps --restart always snowdreamtech/frps
+docker run -d -m 100m --network host -v /home/frp/frps.ini:/etc/frp/frps.ini --name frps --restart always snowdreamtech/frps:0.46.1
+
+docker run --restart=always --network host -d -v /storage/frps/frps.toml:/etc/frp/frps.toml --name frps snowdreamtech/frps:0.52.3
 
 docker run -d \
 	-m 100m \
@@ -542,7 +546,10 @@ token = chunhui
 
 docker pull snowdreamtech/frpc
 
-docker run -d -m 100m --restart always --network host --name frpc -v /home/frp/frpc.ini:/etc/frp/frpc.ini snowdreamtech/frpc
+docker run -d --restart always --network host --name frpc -v /home/frp/frpc.toml:/etc/frp/frpc.toml snowdreamtech/frpc
+
+docker run --restart=always --network host -d -v /etc/frp/frpc.toml:/etc/frp/frpc.toml --name frpc snowdreamtech/frpc
+
 
 docker run -d -m 100m \
 	--restart always \
