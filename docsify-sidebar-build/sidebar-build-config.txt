@@ -8,7 +8,8 @@
         "README.md",
         "favicon.ico",
         "index.html",
-        "CNAME"
+        "CNAME",
+	"LICENSE"
     ],
     "ignoreMatchDir": [
         "^\\..*"
