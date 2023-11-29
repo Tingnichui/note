@@ -27,9 +27,8 @@ https://www.oracle.com/java/technologies/downloads/#java8
 用xftp，或者直接用xshell切换到解压目录，将文件拖动进去就行，我这里下载到/usr/local这个目录
 
 ```bash
-cd /user/local
-tar -zxvf jdk-8u361-linux-x64.tar.gz
-mv jdk1.8.0_371/ java
+cd /usr/local
+tar -zxvf jdk-8u381-linux-x64.tar.gz
 ```
 
 2.配置环境
@@ -43,7 +42,7 @@ vim /etc/profile
 写入配置 路径换成自己的
 
 ```
-export JAVA_HOME=/usr/local/java
+export JAVA_HOME=/usr/local/jdk1.8.0_381
 export PATH=$JAVA_HOME/bin:$PATH
 export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
 export JRE_HOME=$JAVA_HOME/jre 
@@ -416,7 +415,9 @@ wget http://nginx.org/download/nginx-1.18.0.tar.gz
 tar -zxvf nginx-1.18.0.tar.gz
 # 配置并编译
 cd /usr/local/nginx-1.18.0
+# 设置安装目录为 /usr/local/nginx 
 ./configure --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module
+# 编译安装
 make && make install
 ```
 
