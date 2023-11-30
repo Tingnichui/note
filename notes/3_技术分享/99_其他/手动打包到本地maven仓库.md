@@ -1,4 +1,4 @@
-创建一个pom.xml，内容如下
+有可能需要创建一个pom.xml，内容如下
 
 ```
 <?xml version="1.0" encoding="UTF-8"?>
@@ -19,6 +19,12 @@
 ```
 .\mvn install:install-file -Dfile=D:\tempfile\joda-time-2.10.10.jar -DgroupId="com.ai.common" -DartifactId="ai-common-cms" -Dversion="1.0-SNAPSHOT" -Dpackaging=jar
 ```
+
+```
+.\mvn install:install-file -Dfile=D:\tempfile\joda-time-2.10.10.jar -DgroupId="org.apache.commons" -DartifactId="commons-dbcp2" -Dversion="2.2.0" -Dpackaging=jar --settings "C:\MyProgram\develop\Maven\apache-maven-3.5.4-yaxin\conf\settings-导包时使用.xml"
+```
+
+
 
 ## 参考文章
 
