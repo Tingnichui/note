@@ -20,8 +20,8 @@
 .\mvn install:install-file -Dfile=D:\tempfile\joda-time-2.10.10.jar -DgroupId="com.ai.common" -DartifactId="ai-common-cms" -Dversion="1.0-SNAPSHOT" -Dpackaging=jar
 ```
 
-```
-.\mvn install:install-file -Dfile=D:\tempfile\joda-time-2.10.10.jar -DgroupId="org.apache.commons" -DartifactId="commons-dbcp2" -Dversion="2.2.0" -Dpackaging=jar --settings "C:\MyProgram\develop\Maven\apache-maven-3.5.4-yaxin\conf\settings-导包时使用.xml"
+```shell
+.\mvn install:install-file -Dfile="C:\MyProgram\develop\Maven\apache-maven-3.5.4-yaxin\other-tar\okhttp-3.11.0.jar" -DgroupId="com.squareup.okhttp3" -DartifactId="okhttp" -Dversion="3.11.0" -Dpackaging=jar --settings "C:\MyProgram\develop\Maven\apache-maven-3.5.4-yaxin\conf\settings-导包时使用.xml"
 ```
 
 

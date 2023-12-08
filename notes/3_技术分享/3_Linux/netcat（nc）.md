@@ -4,6 +4,8 @@
 yum install nc -y
 ```
 
+window下载地址：https://eternallybored.org/misc/netcat/
+
 ## 命令
 
 ##### 常用参数
