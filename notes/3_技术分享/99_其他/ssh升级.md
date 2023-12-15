@@ -2,6 +2,10 @@ https://blog.csdn.net/qq_29974229/article/details/133878576
 
 https://gitee.com/qqmiller/openssh-9.5p1-.x86_64.git
 
+
+
+https://rpmfind.net/
+
 ```shell
 # 创建备份目录
 cd /opt/ && mkdir backup
@@ -43,6 +47,9 @@ mv /opt/backup/sshd_config.backup /etc/ssh/sshd_config
 vim /etc/ssh/sshd_config
 PermitRootLogin yes
 PubkeyAuthentication yes
+echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config
+echo 'PubkeyAuthentication yes' >> /etc/ssh/sshd_config
+echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config
 
 chkconfig --add sshd
 chkconfig sshd on
@@ -56,6 +63,64 @@ sed -i 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
 ```
 
 
+
+```shell
+#!/bin/bash
+# 使用教程地址 https://lblog.net/?p=282
+# 备份
+cd /opt/ && mkdir backup
+mv /usr/bin/openssl  /opt/backup/openssl.old
+mv /usr/lib64/openssl /opt/backup/lib64-openssl.old
+mv /etc/ssh/sshd_config /opt/backup/sshd_config.backup
+mv /etc/pam.d/sshd /opt/backup/sshd.backup
+tar -zcvf /opt/openssl-ssh.tar.gz /opt/backup/
+
+# 卸载
+yum -y remove openssl
+rpm -e --nodeps `rpm -qa | grep openssh`
+# 安装依赖
+yum -y install gcc pam-devel zlib-devel openssl-devel
+
+# 安装openssl
+cd /opt/ && tar -xzvf openssl-1.1.1w.tar.gz && cd openssl-1.1.1w/
+./config --prefix=/usr/local/ssl -d shared
+make && make install
+echo '/usr/local/ssl/lib' >> /etc/ld.so.conf
+ldconfig -v
+
+# 安装openssh
+cd /opt/ && tar -zxvf openssh-9.5p1.tar.gz && cd openssh-9.5p1
+./configure --prefix=/usr/local/openssh --with-zlib=/usr/local/zlib --with-ssl-dir=/usr/local/ssl
+make && make install
+
+
+
+echo 'PermitRootLogin yes' >> /usr/local/openssh/etc/sshd_config
+echo 'PubkeyAuthentication yes' >> /usr/local/openssh/etc/sshd_config
+echo 'PasswordAuthentication yes' >> /usr/local/openssh/etc/sshd_config
+ssh -V
+mv /opt/backup/sshd.backup /etc/pam.d/sshd
+mv /opt/backup/sshd_config.backup /etc/ssh/sshd_config
+chmod 600 /etc/ssh/ssh_host_rsa_key /etc/ssh/ssh_host_ecdsa_key /etc/ssh/ssh_host_ed25519_key
+cd /opt/openssh-9.5p1
+cp -a contrib/redhat/sshd.init /etc/init.d/sshd
+chmod u+x /etc/init.d/sshd
+echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config
+echo 'PubkeyAuthentication yes' >> /etc/ssh/sshd_config
+echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config
+cat /etc/ssh/sshd_config
+chkconfig --add sshd
+chkconfig sshd on
+systemctl restart sshd
+ssh -V
+history 
+```
+
+```
+cd /usr/local/
+ln -s /usr/local/openssh/bin/* /usr/bin/
+ln -s /usr/local/openssh/sbin/sshd /usr/sbin/sshd
+```
 
 
 
