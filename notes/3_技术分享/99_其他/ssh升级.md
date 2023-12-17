@@ -93,33 +93,23 @@ cd /opt/ && tar -zxvf openssh-9.5p1.tar.gz && cd openssh-9.5p1
 ./configure --prefix=/usr/local/openssh --with-zlib=/usr/local/zlib --with-ssl-dir=/usr/local/ssl
 make && make install
 
-
-
+# 修改配置
 echo 'PermitRootLogin yes' >> /usr/local/openssh/etc/sshd_config
-echo 'PubkeyAuthentication yes' >> /usr/local/openssh/etc/sshd_config
-echo 'PasswordAuthentication yes' >> /usr/local/openssh/etc/sshd_config
-ssh -V
-mv /opt/backup/sshd.backup /etc/pam.d/sshd
-mv /opt/backup/sshd_config.backup /etc/ssh/sshd_config
-chmod 600 /etc/ssh/ssh_host_rsa_key /etc/ssh/ssh_host_ecdsa_key /etc/ssh/ssh_host_ed25519_key
-cd /opt/openssh-9.5p1
-cp -a contrib/redhat/sshd.init /etc/init.d/sshd
+#echo 'PubkeyAuthentication yes' >> /usr/local/openssh/etc/sshd_config
+#echo 'PasswordAuthentication yes' >> /usr/local/openssh/etc/sshd_config
+
+# sshd
+cp -a /opt/openssh-9.5p1/contrib/redhat/sshd.init /etc/init.d/sshd
 chmod u+x /etc/init.d/sshd
-echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config
-echo 'PubkeyAuthentication yes' >> /etc/ssh/sshd_config
-echo 'PasswordAuthentication yes' >> /etc/ssh/sshd_config
-cat /etc/ssh/sshd_config
+
+# 创建软连接
+ln -s /usr/local/openssh/bin/* /usr/bin/
+ln -s /usr/local/openssh/sbin/sshd /usr/sbin/sshd
+# 假如到系统管理并且重启
 chkconfig --add sshd
 chkconfig sshd on
 systemctl restart sshd
 ssh -V
-history 
-```
-
-```
-cd /usr/local/
-ln -s /usr/local/openssh/bin/* /usr/bin/
-ln -s /usr/local/openssh/sbin/sshd /usr/sbin/sshd
 ```
 
 
