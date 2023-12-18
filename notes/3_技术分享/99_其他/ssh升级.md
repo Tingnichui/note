@@ -79,7 +79,8 @@ tar -zcvf /opt/openssl-ssh.tar.gz /opt/backup/
 yum -y remove openssl
 rpm -e --nodeps `rpm -qa | grep openssh`
 # 安装依赖
-yum -y install gcc pam-devel zlib-devel openssl-devel
+# yum -y install gcc pam-devel zlib-devel openssl-devel
+cd /opt/rpm && rpm -Uvh --force --nodeps *.rpm 
 
 # 安装openssl
 cd /opt/ && tar -xzvf openssl-1.1.1w.tar.gz && cd openssl-1.1.1w/

@@ -192,6 +192,7 @@
       - [Java项目打包成exe](/notes/3_技术分享/99_其他/Java项目打包成exe.md)
       - [python免安装](/notes/3_技术分享/99_其他/python免安装.md)
       - [RAID](/notes/3_技术分享/99_其他/RAID.md)
+      - [rpm离线安装](/notes/3_技术分享/99_其他/rpm离线安装.md)
       - [springboot排除bean](/notes/3_技术分享/99_其他/springboot排除bean.md)
       - [ssh升级](/notes/3_技术分享/99_其他/ssh升级.md)
       - [telnet远程连接服务器](/notes/3_技术分享/99_其他/telnet远程连接服务器.md)
