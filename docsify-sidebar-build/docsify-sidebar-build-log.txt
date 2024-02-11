@@ -397,3 +397,5 @@
 2024-02-01 12:44:56 生成成功
 2024-02-09 12:24:28 读取的配置文件为{"ignoreMatchDir":["^\\..*","^x_.*"],"ignoreFile":["README.md","favicon.ico","index.html","CNAME","LICENSE"],"rootDir":"C:\\MyDocument\\chunhui\\note","ignoreMatchFile":["^_.*","^\\..*","^耿辉_Java_13291306661.*","^x_.*",".*\\.xmind$"],"ignoreDir":["navbar","docsify-sidebar-build"]}
 2024-02-09 12:24:28 生成成功
+2024-02-11 16:50:34 读取的配置文件为{"ignoreMatchDir":["^\\..*","^x_.*"],"ignoreFile":["README.md","favicon.ico","index.html","CNAME","LICENSE"],"rootDir":"C:\\MyDocument\\chunhui\\note","ignoreMatchFile":["^_.*","^\\..*","^耿辉_Java_13291306661.*","^x_.*",".*\\.xmind$"],"ignoreDir":["navbar","docsify-sidebar-build"]}
+2024-02-11 16:50:34 生成成功
