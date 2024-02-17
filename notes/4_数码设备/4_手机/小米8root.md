@@ -22,7 +22,7 @@
 
    连接手机后，点击右上角设置 - 驱动检测，安装驱动
 
-4. 手机进入Bootloader模式
+4. 手机进入FASTBOOT模式
 
    手机关机后，同时按住开机键和音量下键
 
@@ -42,7 +42,10 @@
 
    官方版本：https://github.com/topjohnwu/Magisk/releases
 
-   alpha（推荐）： https://github.com/vvb2060/Magisk/tags
+   **alpha（推荐）**： 
+
+   1. 网页下载 https://install.appcenter.ms/users/vvb2060/apps/magisk/distribution_groups/public 
+   2. tg中下载https://t.me/magiskalpha
 
    下载后修改文件后缀为zip上传到手机存储，我的电脑上传或者使用adb命令上传
 
@@ -60,27 +63,19 @@
    adb reboot bootloader
    ```
 
-5. 刷入三方recovery
+5. 刷入三方recovery并进入Recovery模式
 
    ```shell
    # 查看是否连接到设备
    fastboot devices
    # 刷入分区  将三方recovery刷入recovery分区
    fastboot flash recovery TWRP等三方包的绝对路径
-   # 重启手机 不必执行这个命令，直接到下一步进入recovery模式
-   fastboot reboot
+   fastboot flash recovery D:\tempfile\xiaomi8root\twrp-3.7.0_9-0-dipper.img
    ```
-
+   
    此时twrp已被刷入，但别急着重启，直接重启系统会导致系统将recovery还原，我们需要直接进入到twrp中。
    先按下音量加和电源键，在手机屏幕熄灭时松开电源键，手机显示小米logo并震动时松开音量键，等待片刻即可进入recovery。
-
-6. 进入Recovery模式
-
-   ```shell
-   # 重启进入Recovery
-   adb reboot recovery
-   ```
-
+   
 7. 刷入Magisk
 
    首次进入TWRP管理界面时系统会提示是否修改系统分区，**先去点击Change Language**，将语言改成中文。然后将**蓝色的条滑动到右侧**，表示允许修改。
@@ -89,11 +84,11 @@
 
 8. 完成
 
-   当此处能够正常显示版本号时，Magisk则安装成功了，当然你也可以去下载几个需要root权限的软件试试，比如MT文件管理器、RE文件浏览器之类的，去看看比如/data之类没有root访问不了的路径。
-
    刷入面具就自动获取root了, 如果进去显示Magisk让你安装完整版本的Magisk的话，我们把我们上面下载的apk, 修改为zip的在修改成apk进行安装
 
    如果magisk ramdisk显示false, 那在点击安装，选择直接安装，安装后重启，zygisk可以点击设置，在设置中打开，重启生效。
+
+   当此处能够正常显示版本号时，Magisk则安装成功了，当然你也可以去下载几个需要root权限的软件试试，比如MT文件管理器、RE文件浏览器之类的，去看看比如/data之类没有root访问不了的路径。
 
 ## 参考文章
 
