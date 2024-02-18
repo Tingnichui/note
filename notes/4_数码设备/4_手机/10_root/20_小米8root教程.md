@@ -45,12 +45,12 @@
    **alpha（推荐）**： 
 
    1. 网页下载 https://install.appcenter.ms/users/vvb2060/apps/magisk/distribution_groups/public 
-   2. tg中下载https://t.me/magiskalpha
+   2. tg中下载 https://t.me/magiskalpha
 
    下载后修改文件后缀为zip上传到手机存储，我的电脑上传或者使用adb命令上传
 
    ```shell
-   # adb push 本地上传文件绝对路径 手机文件
+   # adb push 本地上传文件绝对路径 手机目录
    adb push C:\MyProgram\develop\burpsuite\9a5ba575.0 /system/etc/security/cacerts/
    ```
 
@@ -73,7 +73,7 @@
    fastboot flash recovery D:\tempfile\xiaomi8root\twrp-3.7.0_9-0-dipper.img
    ```
    
-   此时twrp已被刷入，但别急着重启，直接重启系统会导致系统将recovery还原，我们需要直接进入到twrp中。
+   ❗**此时twrp已被刷入，但别急着重启，直接重启系统会导致系统将recovery还原，我们需要直接进入到twrp中。**
    先按下音量加和电源键，在手机屏幕熄灭时松开电源键，手机显示小米logo并震动时松开音量键，等待片刻即可进入recovery。
    
 7. 刷入Magisk
@@ -89,6 +89,10 @@
    如果magisk ramdisk显示false, 那在点击安装，选择直接安装，安装后重启，zygisk可以点击设置，在设置中打开，重启生效。
 
    当此处能够正常显示版本号时，Magisk则安装成功了，当然你也可以去下载几个需要root权限的软件试试，比如MT文件管理器、RE文件浏览器之类的，去看看比如/data之类没有root访问不了的路径。
+
+## 模块安装
+
+首先安装**救砖模块**，其余的按需安装
 
 ## 参考文章
 

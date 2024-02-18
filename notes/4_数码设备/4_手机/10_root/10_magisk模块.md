@@ -26,11 +26,17 @@ https://www.coolapk1s.com/feed/33911784
 
 > Momo是一款检测root与系统环境的APP，可以检测你的设备是否被root以及系统环境是否存在异常。
 >
+> 看个人需求决定需不需要过momo检测
+>
 > [隐藏root保姆级教程无效原因分析第(一)期之Momo使用手册*（转自酷安）](https://www.bilibili.com/read/cv19575807/)
+
+tg中下载，群组中搜索momo https://t.me/magiskalpha
+
+---
 
 ## JustTrustMe
 
-https://github.com/ViRb3/TrustMeAlready
+https://github.com/ViRb3/TrustMeAlready/releases
 
 ---
 
@@ -45,28 +51,6 @@ https://github.com/ac-pm/SSLUnpinning_Xposed
 > [LSPosed 安装教程（LSP框架安装教程）](https://magiskcn.com/lsposed-install)
 
 Magisk Manager - 设置 - Zygisk打开 - 安装模块（https://github.com/LSPosed/LSPosed/tags） -重启
-
----
-
-**Universal GMS Doze**：https://github.com/gloeyisk/universal-gms-doze 
-
-WiFi Bounding：https://github.com/Magisk-Modules-Repo/wifi-bonding 
-
-Google Dialer Mod：https://github.com/jacopotediosi/GoogleDialerMod 
-
-Google Dialer Mod-Magisk：https://github.com/jacopotediosi/GoogleDialerMod-Magisk
-
- JamesDSP Manager：https://github.com/Zackptg5/JamesDSPManager 
-
-**Uperf**：https://github.com/yc9559/uperf 
-
-FixChinaCarrier: https://github.com/RiwiHow/FixChinaCarrier 
-
-指纹支付：https://github.com/eritpchy/FingerprintPay 
-
-Fingerface：https://github.com/topjohnwu/Fingerface
-
-
 
 ## 参考文章
 
