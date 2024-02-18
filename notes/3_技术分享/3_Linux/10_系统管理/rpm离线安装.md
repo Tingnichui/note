@@ -4,7 +4,7 @@ yum -y install gcc pam-devel zlib-devel openssl-devel
 
 
 
-```
+```shell
 yum deplist openssl-devel
 
 yum install yum-utils -y
