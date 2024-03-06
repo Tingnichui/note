@@ -218,6 +218,7 @@
       - [Nginx](/notes/3_技术分享/4_中间件/Nginx/)
         - [安装](/notes/3_技术分享/4_中间件/Nginx/00_安装.md)
         - [生成https证书](/notes/3_技术分享/4_中间件/Nginx/10_生成https证书.md)
+        - [配置ssl证书](/notes/3_技术分享/4_中间件/Nginx/11_配置ssl证书.md)
       - [Redis](/notes/3_技术分享/4_中间件/Redis/)
         - [Redis安装](/notes/3_技术分享/4_中间件/Redis/00_Redis安装.md)
         - [redis恢复与备份](/notes/3_技术分享/4_中间件/Redis/10_redis恢复与备份.md)
