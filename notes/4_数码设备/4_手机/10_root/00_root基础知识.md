@@ -35,6 +35,10 @@ recovery模式下可以刷入带有脚本的zip包，可以实现对系统的增
 
 Riru的Lsposed框架作用Zygote阶段，通过注入Zygote来实现对其创建进程的修改。
 
+#### 三、root工具
+
+adb等： https://developer.android.com/tools/releases/platform-tools?hl=zh-cn
+
 ## 参考文章
 
 1. [玩机必看！带你入坑安卓刷机，小白也能看懂的ROOT基础指南来啦！](https://www.bilibili.com/video/BV1BY4y1H7Mc)
