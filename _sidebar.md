@@ -275,6 +275,7 @@
         - [小米手机root相关问题解决方法](/notes/4_数码设备/4_手机/10_root/99_小米手机root相关问题解决方法.md)
     - [其他](/notes/4_数码设备/5_其他/)
       - [NAS](/notes/4_数码设备/5_其他/NAS.md)
+      - [openwrt关闭ipv6](/notes/4_数码设备/5_其他/openwrt关闭ipv6.md)
       - [OpenWrt软路由](/notes/4_数码设备/5_其他/OpenWrt软路由.md)
       - [PC端常用软件](/notes/4_数码设备/5_其他/PC端常用软件.md)
       - [teamviewer](/notes/4_数码设备/5_其他/teamviewer.md)
