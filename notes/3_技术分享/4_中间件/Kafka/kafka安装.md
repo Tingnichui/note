@@ -1,22 +1,43 @@
-# Kafka
+## Kafka
 
-https://hub.docker.com/r/bitnami/kafka
+> https://hub.docker.com/r/bitnami/kafka
 
-#### 不设置密码认证 
-
-连接不带密码认证的zookeeper
-
-```shell
-docker run -d --name kafka \
-    --network tingnichui \
-	--network-alias kafka \
-    -p 9092:9092 \
-    -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
-    -e KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://192.168.139.101:9092 \
-    bitnami/kafka:latest | xargs docker logs -f 
+```bash
+docker pull bitnami/kafka:3.7.0
 ```
 
-#### 设置密码认证
+### 不设置安全认证
+
+```bash
+docker run -d --name kafka \
+    -p 9092:9092 \
+    --link zookeeper \
+    -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
+    -e KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://192.168.139.102:9092 \
+    bitnami/kafka:3.7.0 | xargs docker logs -f 
+```
+
+### 设置密码认证
+
+```bash
+docker run -d --name kafka \
+	-p 9092:9092 \
+    --link zookeeper \
+    -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
+    -e ALLOW_PLAINTEXT_LISTENER=yes \
+    -e KAFKA_CLIENT_LISTENER_NAME=SASL_PLAINTEXT \
+    -e KAFKA_CFG_LISTENERS=PLAINTEXT://:9092，CONTROLLER://:9093 \
+    -e KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://:9092 \
+    -e KAFKA_CLIENT_USERS=user \
+    -e KAFKA_CLIENT_PASSWORDS=password \
+    -e KAFKA_CFG_SASL_MECHANISM_INTER_BROKER_PROTOCOL=SASL_PLAINTEXT \
+    -e KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT \
+	bitnami/kafka:3.7.0 | xargs docker logs -f 
+```
+
+
+
+### 设置密码认证
 
 ```
 addauth digest admin:password
