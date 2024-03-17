@@ -1,5 +1,7 @@
 ## docker安装
 
+> 
+
 ```shell
 docker run --name mysql \
     --restart=always \
@@ -8,7 +10,7 @@ docker run --name mysql \
     -v /home/application/mysql/data:/var/lib/mysql  \
     -v /home/application/mysql/conf:/etc/mysql/conf.d \
     -e TZ=Asia/Shanghai  \
-    -e MYSQL_ROOT_PASSWORD=admin!@#  \
+    -e MYSQL_ROOT_PASSWORD=password  \
     -d mysql:5.7.42
 ```
 
