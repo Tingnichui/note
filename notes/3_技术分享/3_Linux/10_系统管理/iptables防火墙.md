@@ -144,11 +144,24 @@ iptables -I INPUT -p udp -m udp --dport 5140 -j LOG --log-level 1 --log-prefix "
 iptables -L --line-numbers | grep logstash
 ```
 
-参考文章
+## 参考命令
+
+```bash
+# 将3306端口的数据转发到120.77.182.143  不生效
+iptables -t nat -A PREROUTING -p tcp --dport  3306 -j DNAT --to-destination 120.77.182.143
+
+iptables -t nat -A PREROUTING -p tcp --dport 3306 -j DNAT --to-destination 18.222.236.211:3306
+iptables -t nat -A POSTROUTING -p tcp -d 18.222.236.211 --dport 8017 -j SNAT --to-source 120.79.131.118
+```
+
+
+
+## 参考文章
 
 1. [iptables基础知识详解](https://blog.csdn.net/u011537073/article/details/82685586)
 2. [IPTABLES 详解](https://www.cnblogs.com/my-show-time/p/16858254.html)
 3. [iptables命令使用详解](https://blog.csdn.net/Hell_potato777/article/details/126771293)
 4. [iptables -m, -p 参数说明 ](https://www.cnblogs.com/miracle-luna/p/13718436.html)
 5. https://blog.csdn.net/qq_40265822/article/details/124998123
+6. [iptables做TCP/UDP端口转发【转】](https://www.cnblogs.com/paul8339/p/14688156.html)
 
