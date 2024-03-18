@@ -11,7 +11,7 @@
 #### 部署准备
 
 ```bash
-# 拉去镜像
+# 拉取镜像
 docker pull bitnami/kafka:3.7.0
 # 创建数据挂载目录
 mkdir -p /home/application/kafka/kafka_data
