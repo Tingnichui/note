@@ -1,29 +1,45 @@
 ## Kafka
 
-> https://hub.docker.com/r/bitnami/kafka
+### docker部署
+
+| 配置名称                       |                                                              |
+| ------------------------------ | ------------------------------------------------------------ |
+| KAFKA_CFG_LISTENERS            | 指定 Kafka 服务器监听客户端连接的地址和端口，区分Broker节点与Controller节点 |
+| KAFKA_CFG_ADVERTISED_LISTENERS | **广播给客户端的地址和端口**，通常配置为 **Kafka 所在服务器的外网地址**。 |
+|                                |                                                              |
+
+#### 部署准备
 
 ```bash
+# 拉去镜像
 docker pull bitnami/kafka:3.7.0
+# 创建数据挂载目录
+mkdir -p /home/application/kafka/kafka_data
+# 挂载目录授权 NOTE: As this is a non-root container, the mounted files and directories must have the proper permissions for the UID 1001.
+chown -R 1001:1001 /home/application/kafka/kafka_data
 ```
 
-### 不设置安全认证
+#### 不设置安全认证
 
 ```bash
 docker run -d --name kafka \
+	--restart=always \
     -p 9092:9092 \
     --link zookeeper \
     -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
     -e KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://192.168.139.102:9092 \
+    -v /home/application/kafka/kafka_data:/bitnami/kafka \
     bitnami/kafka:3.7.0 | xargs docker logs -f 
 ```
 
-### 设置密码认证
+#### 设置密码认证
 
 ```bash
 docker run -d --name kafka \
 	-p 9092:9092 \
     --link zookeeper \
     -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
+    
     -e ALLOW_PLAINTEXT_LISTENER=yes \
     -e KAFKA_CLIENT_LISTENER_NAME=SASL_PLAINTEXT \
     -e KAFKA_CFG_LISTENERS=PLAINTEXT://:9092，CONTROLLER://:9093 \
@@ -35,10 +51,6 @@ docker run -d --name kafka \
 	bitnami/kafka:3.7.0 | xargs docker logs -f 
 ```
 
-
-
-### 设置密码认证
-
 ```
 addauth digest admin:password
 setAcl / auth:admin:cdrwa
@@ -47,6 +59,7 @@ setAcl / auth:admin:cdrwa
 kafka设置sasl认证
 
 ```shell
+# zk设置了sasl
 docker run -d --name kafka \
 	-p 9092:9092 \
     --link zookeeper \
@@ -65,10 +78,23 @@ docker run -d --name kafka \
 	bitnami/kafka | xargs docker logs -f 
 ```
 
+```bash
+# zk未设置安全认证
+docker run -d --name kafka \
+	--restart=always \
+    -p 9092:9092 \
+    --link zookeeper \
+    -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
+    -e KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://192.168.139.102:9092 \
+    bitnami/kafka:3.7.0 | xargs docker logs -f 
+```
+
+
+
 ```shell
 docker run -d --name kafka_sasl \
     -p 9092:9092 \
-    --network tingnichui \
+    --link zookeeper \
     -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
     -e KAFKA_CLIENT_LISTENER_NAME=SASL_PLAINTEXT \
     -e KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,SASL_PLAINTEXT://:9093 \
@@ -99,4 +125,19 @@ docker run \
     bitnami/kafka:latest  | xargs docker logs -f 
 ```
 
-https://zhuanlan.zhihu.com/p/586005021
+#### 参考文章
+
+1. https://hub.docker.com/r/bitnami/kafka
+2. https://zhuanlan.zhihu.com/p/586005021
+3. [Kafka服务端参数配置](https://blog.csdn.net/weixin_52851967/article/details/128173919)
+4. [一文搞懂Kafka中的listeners和advertised.listeners以及其他通信配置](https://blog.51cto.com/szzdzhp/5683496)
+5. [kafka各种环境安装(window,linux,docker,k8s),包含KRaft模式](https://blog.csdn.net/qq_38263083/article/details/132341449)
+
+
+
+## tar部署
+
+#### 参考文章
+
+1. 官方文档：https://kafka.apache.org/documentation/#quickstart
+
