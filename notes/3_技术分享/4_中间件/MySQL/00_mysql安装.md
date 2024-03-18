@@ -1,6 +1,6 @@
 ## docker安装
 
-> 
+### 5.7
 
 ```shell
 docker run --name mysql \
@@ -13,6 +13,8 @@ docker run --name mysql \
     -e MYSQL_ROOT_PASSWORD=password  \
     -d mysql:5.7.42
 ```
+
+### 8.0
 
 ```shell
 docker run --name mysql \
@@ -27,6 +29,91 @@ docker run --name mysql \
 ```
 
 ## 二进制安装
+
+### 5.7
+
+> 此处版本为5.7.44
+
+[MySQL基础知识（二）-超详细 Linux安装MySQL5.7完整版教程及遇到的坑](https://cloud.tencent.com/developer/article/2190175)
+
+```bash
+# 卸载残留
+rpm -qa | grep mysql
+rpm -qa | grep mariadb
+
+rpm -e --nodeps `rpm -qa|grep mariadb`
+rpm -e --nodeps `rpm -qa|grep mysql`
+
+# 下载解压
+cd /usr/local/
+wget https://cdn.mysql.com/archives/mysql-5.7/mysql-5.7.44-linux-glibc2.12-x86_64.tar.gz
+tar -zxvf mysql-5.7.44-linux-glibc2.12-x86_64.tar.gz -C /usr/local
+mv mysql-5.7.44-linux-glibc2.12-x86_64 mysql
+
+# 创建mysql用户组和用户
+groupadd mysql
+useradd -r -g mysql mysql
+
+# 创建数据目录并赋予权限
+mkdir -p /usr/local/mysql/data
+chown mysql:mysql -R /usr/local/mysql/data
+
+# 创建配置文件
+vim /usr/local/mysql/my.cnf
+
+
+[mysqld]
+bind-address=0.0.0.0
+port=3306
+user=mysql
+basedir=/usr/local/mysql
+datadir=/usr/local/mysql/data
+socket=/tmp/mysql.sock
+log-error=/usr/local/mysql/data/mysql.err
+pid-file=/usr/local/mysql/data/mysql.pid
+#character config
+character_set_server=utf8mb4
+symbolic-links=0
+explicit_defaults_for_timestamp=true
+
+[client]
+default-character-set=utf8
+
+[mysql]
+default-character-set=utf8
+
+# 初始化数据库 设置默认配置文件 等
+/usr/local/mysql/bin/mysqld --defaults-file=/usr/local/mysql/my.cnf --basedir=/usr/local/mysql/ --datadir=/usr/local/mysql/data/ --user=mysql --initialize
+
+
+# 查看root用户密码
+cat /usr/local/mysql/data/mysql.err
+
+# 启动mysql服务
+cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql
+service mysql start
+
+# 配置环境变量
+vim /etc/profile
+# 写入配置 路径换成自己的
+export PATH=$PATH:/usr/local/mysql/bin
+# 生效配置
+source /etc/profile
+# 验证
+mysql --version
+
+# 修改密码
+mysql -uroot -p
+
+SET PASSWORD = PASSWORD('123456');
+ALTER USER 'root'@'localhost' PASSWORD EXPIRE NEVER;
+FLUSH PRIVILEGES;
+use mysql;
+update user set host = '%' where user = 'root';
+FLUSH PRIVILEGES;
+```
+
+### 8.0
 
 安装
 
