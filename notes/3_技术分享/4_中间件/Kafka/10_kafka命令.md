@@ -67,3 +67,4 @@ bin/kafka-topics.sh --delete --bootstrap-server 192.168.139.102:9092  --topic te
 参考文章
 
 1. [悄悄掌握 Kafka 常用命令，再也不用全网搜索了（建议收藏）](https://cloud.tencent.com/developer/article/1761560)
+1. [Kafka 生产环境部署指南](https://xie.infoq.cn/article/d57f83779490c7ff62b6b59ae)

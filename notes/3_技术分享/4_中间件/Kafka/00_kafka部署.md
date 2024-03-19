@@ -135,9 +135,46 @@ docker run \
 
 
 
-## tar部署
+## 二进制部署
+
+下载地址：https://dlcdn.apache.org/kafka/
+
+我这里kafka使用的是自己搭建的zk
+
+```bash
+cd /usr/local
+wget https://dlcdn.apache.org/kafka/3.7.0/kafka_2.13-3.7.0.tgz
+
+tar -xvf kafka_2.13-3.7.0.tgz  -C /usr/local
+mv kafka_2.13-3.7.0 kafka
+
+# 创建kafka数据存放目录
+mkdir -p /usr/local/kafka/data
+
+# 修改kafka配置文件
+vim /usr/local/kafka/config/server.properties
+# listeners=PLAINTEXT://10.0.0.80:9092    # kafka默认监听端口号为9092,
+log.dirs=/usr/local/kafka/data             # 指定kafka数据存放目录
+zookeeper.connect=localhost:2181        # 指定ZooKeeper地址，kafka要将元数据存放到zk中，这里会在本机启动一个zk
+
+# 启动zk 我这里使用自己搭建zk服务，不用kafka自带的
+# bin/zookeeper-server-start.sh config/zookeeper.properties
+
+# 前台启动
+bin/kafka-server-start.sh config/server.properties
+# 后台启动
+bin/kafka-server-start.sh -daemon config/server.properties
+# 停止
+bin/kafka-server-stop.sh
+
+# 5.查看进程及端口
+ps -ef | grep kafka
+ss -tnl | grep 9092
+
+```
 
 #### 参考文章
 
 1. 官方文档：https://kafka.apache.org/documentation/#quickstart
+1. [kafka的原理及集群部署详解](https://www.cnblogs.com/hgzero/p/17229564.html)
 
