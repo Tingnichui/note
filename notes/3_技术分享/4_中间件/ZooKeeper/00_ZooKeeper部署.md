@@ -52,23 +52,32 @@ docker run -d --name zookeeper \
 ![image-20240319141651485](https://chunhui-a.oss-cn-nanjing.aliyuncs.com/typora/img/image-20240319141651485.png)
 
 ```bash
+# 下载解压
 cd /usr/local
 wget https://archive.apache.org/dist/zookeeper/zookeeper-3.9.2/apache-zookeeper-3.9.2-bin.tar.gz
-
 tar -zxvf apache-zookeeper-3.9.2-bin.tar.gz -C /usr/local
 
+# 重命名
 mv apache-zookeeper-3.9.2-bin zookeeper
 
-cp /usr/local/zookeeper/conf/zoo_sample.cfg /usr/local/zookeeper/conf/zoo.cfg 
-
+# 创建数zk数据目录
 mkdir -p /usr/local/zookeeper/data
 
+# 编写zk配置
+cp /usr/local/zookeeper/conf/zoo_sample.cfg /usr/local/zookeeper/conf/zoo.cfg 
 vim /usr/local/zookeeper/conf/zoo.cfg
 
+# 修改配置中的
+dataDir=/usr/local/zookeeper/data
+
+
+# 启动zk
 /usr/local/zookeeper/bin/zkServer.sh start
+# 停止zk
+/usr/local/zookeeper/bin/zkServer.sh stop
 
+# 查看是否启动
 ps -ef | grep zookeeper
-
 netstat  -anp | grep 2181
 ```
 

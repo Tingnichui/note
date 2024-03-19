@@ -142,6 +142,7 @@ docker run \
 我这里kafka使用的是自己搭建的zk
 
 ```bash
+# 下载解压
 cd /usr/local
 wget https://dlcdn.apache.org/kafka/3.7.0/kafka_2.13-3.7.0.tgz
 
@@ -160,6 +161,7 @@ zookeeper.connect=localhost:2181        # 指定ZooKeeper地址，kafka要将元
 # 启动zk 我这里使用自己搭建zk服务，不用kafka自带的
 # bin/zookeeper-server-start.sh config/zookeeper.properties
 
+cd /usr/local/kafka/
 # 前台启动
 bin/kafka-server-start.sh config/server.properties
 # 后台启动
