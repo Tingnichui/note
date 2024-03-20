@@ -169,7 +169,7 @@ bin/kafka-server-start.sh -daemon config/server.properties
 # 停止
 bin/kafka-server-stop.sh
 
-# 5.查看进程及端口
+# 查看进程及端口
 ps -ef | grep kafka
 ss -tnl | grep 9092
 

@@ -113,6 +113,20 @@ update user set host = '%' where user = 'root';
 FLUSH PRIVILEGES;
 ```
 
+卸载 https://blog.csdn.net/gdkyxy2013/article/details/105116602
+
+```
+# 该卸载方式只适用于本文章的安装方式，其他方式自行测试
+rm /usr/local/mysql -rf
+rm mysql-5.7.44-linux-glibc2.12-x86_64.tar.gz -rf
+rm /etc/init.d/mysql -rf
+
+whereis mysql
+find / -name mysql
+rm -rf /var/lib/selinux/targeted/active/modules/100/mysql
+rm -rf /usr/share/selinux/targeted/default/active/modules/100/mysql /usr/share/bash-completion/completions/mysql
+```
+
 ### 8.0
 
 安装
