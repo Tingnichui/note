@@ -117,3 +117,11 @@ systemctl enable docker.service
 systemctl status docker
 ```
 
+```
+systemctl stop docker.service
+```
+
+```
+systemctl disable docker.service
+```
+
