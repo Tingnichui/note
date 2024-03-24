@@ -114,7 +114,7 @@ redis-cli -h 127.0.0.1 -p 6379 -a password shutdown
 ps -ef | grep redis
 ```
 
-开机自启---**<u>没用到，重启后似乎还能自动启动</u>**
+开机自启
 
 ```bash
 # 创建文件
