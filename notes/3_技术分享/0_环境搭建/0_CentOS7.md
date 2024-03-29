@@ -66,6 +66,48 @@ java -version
 
 ---
 
+## Maven
+
+下载地址：https://archive.apache.org/dist/maven/maven-3/
+
+
+
+```
+cd /usr/local/
+wget https://archive.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz
+
+tar -zxvf apache-maven-3.5.4-bin.tar.gz -C /usr/local
+```
+
+2.配置环境
+
+编辑配置
+
+```bash
+vim /etc/profile
+```
+
+写入配置 路径换成自己的
+
+```
+export MAVEN_HOME=/usr/local/apache-maven-3.5.4
+export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$PATH
+```
+
+生效配置
+
+```bash
+source /etc/profile
+```
+
+验证
+
+```bash
+mvn -v
+```
+
+参考文章
+
 ## MySQL
 
 安装
