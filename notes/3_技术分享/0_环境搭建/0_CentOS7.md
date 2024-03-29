@@ -70,12 +70,9 @@ java -version
 
 下载地址：https://archive.apache.org/dist/maven/maven-3/
 
-
-
 ```
 cd /usr/local/
 wget https://archive.apache.org/dist/maven/maven-3/3.5.4/binaries/apache-maven-3.5.4-bin.tar.gz
-
 tar -zxvf apache-maven-3.5.4-bin.tar.gz -C /usr/local
 ```
 
@@ -91,7 +88,7 @@ vim /etc/profile
 
 ```
 export MAVEN_HOME=/usr/local/apache-maven-3.5.4
-export PATH=$JAVA_HOME/bin:$MAVEN_HOME/bin:$PATH
+export PATH=$MAVEN_HOME/bin:$PATH
 ```
 
 生效配置
@@ -106,7 +103,28 @@ source /etc/profile
 mvn -v
 ```
 
-参考文章
+修改配置文件
+
+```bash
+# 新建仓库存在目录
+mkdir -p /usr/local/apache-maven-3.5.4/repository
+
+# 编辑配置文件
+vim /usr/local/apache-maven-3.5.4/conf/settings.xml
+
+# 指定本地仓库路径
+<localRepository>/usr/local/apache-maven-3.5.4/repository</localRepository>
+
+# 配置阿里云镜像仓库
+<mirror>
+  <id>alimaven</id>
+  <name>aliyun maven</name>
+  <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+  <mirrorOf>central</mirrorOf>
+</mirror>
+```
+
+
 
 ## MySQL
 
