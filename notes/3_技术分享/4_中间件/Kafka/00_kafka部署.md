@@ -154,7 +154,7 @@ mkdir -p /usr/local/kafka/data
 
 # 修改kafka配置文件
 vim /usr/local/kafka/config/server.properties
-# listeners=PLAINTEXT://10.0.0.80:9092    # kafka默认监听端口号为9092,
+advertised.listeners=PLAINTEXT://your.host.name:9092    # kafka默认监听端口号为9092,your.host.name设置来源地址，kakfa直接扣这个地址的消息
 log.dirs=/usr/local/kafka/data             # 指定kafka数据存放目录
 zookeeper.connect=localhost:2181        # 指定ZooKeeper地址，kafka要将元数据存放到zk中，这里会在本机启动一个zk
 
