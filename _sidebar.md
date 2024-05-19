@@ -178,7 +178,6 @@
         - [磁盘清理](/notes/3_技术分享/3_Linux/10_系统管理/磁盘清理.md)
       - [功能实现](/notes/3_技术分享/3_Linux/20_功能实现/)
         - [crontabs](/notes/3_技术分享/3_Linux/20_功能实现/crontabs.md)
-        - [restart](/notes/3_技术分享/3_Linux/20_功能实现/restart.sh)
         - [shell脚本](/notes/3_技术分享/3_Linux/20_功能实现/shell脚本.md)
         - [shell脚本常用变量](/notes/3_技术分享/3_Linux/20_功能实现/shell脚本常用变量.md)
         - [定时清理文件](/notes/3_技术分享/3_Linux/20_功能实现/定时清理文件.md)
