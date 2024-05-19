@@ -1,3 +1,17 @@
+
+
+[nginx安全:配置allow/deny控制ip访问(ngx_http_access_module)](https://www.cnblogs.com/architectforest/p/12794412.html)
+
+https://nginx.org/en/docs/http/ngx_http_access_module.html
+
+
+
+https://nginx.org/en/docs/http/ngx_http_upstream_module.html
+
+upstream 组名不要有下划线
+
+
+
 ## 引入其他配置文件
 
 http块中引入其他配置文件
