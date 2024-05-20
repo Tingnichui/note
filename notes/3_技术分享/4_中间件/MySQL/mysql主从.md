@@ -208,6 +208,10 @@ Master_SSL_Verify_Server_Cert: No
            Master_TLS_Version:
 ```
 
+Read_Master_Log_Pos: 720092675
+
+Relay_Master_Log_File: mysql-bin.000019
+
 2、关闭现有副本
 
 ```
@@ -234,6 +238,7 @@ tar -zcvf mysql_20240503_bak.tar.gz my.cnf data/
 rm /usr/local/mysql/data /usr/local/mysql/my.cnf -rf
 
 # 解压复制节点文件
+cd /usr/local/mysql
 tar -zxvf mysql_20240503_bak.tar.gz
 
 rm /usr/local/mysql/data/auto.cnf -rf
@@ -242,7 +247,7 @@ rm /usr/local/mysql/data/auto.cnf -rf
 4、复制完成后，重新启动现有副本。
 
 ```
-现有副本启动
+现有副本启动 不是这个新副本
 ```
 
 5、在新副本上，编辑配置并为新副本提供一个唯一的服务器 ID（使用 [`server_id`](https://dev.mysql.com/doc/refman/5.7/en/replication-options.html#sysvar_server_id)系统变量），该 ID 不被源或任何现有副本使用。
@@ -267,76 +272,24 @@ service mysql start
 ```
 
 ```
-SHOW SLAVE STATUS\G;
+# 出现提示时，输入旧 MySQL 服务器的 root 密码。
+mysql_upgrade -uroot -p
 ```
 
 ```
-*************************** 1. row ***************************
-               Slave_IO_State: 
-                  Master_Host: xxx.xx.xxx.xx
-                  Master_User: repl
-                  Master_Port: 3306
-                Connect_Retry: 60
-              Master_Log_File: mysql-bin.000019
-          Read_Master_Log_Pos: 720092675
-               Relay_Log_File: VM-24-3-centos-relay-bin.000052
-                Relay_Log_Pos: 720092888
-        Relay_Master_Log_File: mysql-bin.000019
-             Slave_IO_Running: No
-            Slave_SQL_Running: No
-              Replicate_Do_DB: 
-          Replicate_Ignore_DB: 
-           Replicate_Do_Table: 
-       Replicate_Ignore_Table: 
-      Replicate_Wild_Do_Table: 
-  Replicate_Wild_Ignore_Table: 
-                   Last_Errno: 0
-                   Last_Error: 
-                 Skip_Counter: 0
-          Exec_Master_Log_Pos: 720092675
-              Relay_Log_Space: 0
-              Until_Condition: None
-               Until_Log_File: 
-                Until_Log_Pos: 0
-           Master_SSL_Allowed: No
-           Master_SSL_CA_File: 
-           Master_SSL_CA_Path: 
-              Master_SSL_Cert: 
-            Master_SSL_Cipher: 
-               Master_SSL_Key: 
-        Seconds_Behind_Master: NULL
-Master_SSL_Verify_Server_Cert: No
-                Last_IO_Errno: 0
-                Last_IO_Error: 
-               Last_SQL_Errno: 0
-               Last_SQL_Error: 
-  Replicate_Ignore_Server_Ids: 
-             Master_Server_Id: 0
-                  Master_UUID: 1d30f273-f8e6-11ee-95b6-00163e04f342
-             Master_Info_File: /usr/local/mysql/data/master.info
-                    SQL_Delay: 0
-          SQL_Remaining_Delay: NULL
-      Slave_SQL_Running_State: 
-           Master_Retry_Count: 86400
-                  Master_Bind: 
-      Last_IO_Error_Timestamp: 
-     Last_SQL_Error_Timestamp: 
-               Master_SSL_Crl: 
-           Master_SSL_Crlpath: 
-           Retrieved_Gtid_Set: 
-            Executed_Gtid_Set: 
-                Auto_Position: 0
-         Replicate_Rewrite_DB: 
-                 Channel_Name: 
-           Master_TLS_Version:
+mysql -uroot -p
+```
+
+```
+RESET SLAVE;
+change master to master_host="xxx.xxx.xxx.xxx", master_user="xxx", master_password="xxxxxx", master_log_file="mysql-bin.000019", master_log_pos=720092675;
 ```
 
 7、通过发出以下语句启动复制线程 [`START SLAVE`](https://dev.mysql.com/doc/refman/5.7/en/start-slave.html)：
 
 ```
- START SLAVE;
- reset slave;
- show slave status\G;
+START SLAVE;
+SHOW SLAVE STATUS\G;
 ```
 
 ### 参考文章
