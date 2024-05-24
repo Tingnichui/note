@@ -12,6 +12,14 @@ upstream 组名不要有下划线
 
 
 
+https://nginx.org/en/docs/http/ngx_http_proxy_module.html
+
+
+
+[Nginx配置文件详解](https://www.cnblogs.com/54chensongxia/p/12938929.html)
+
+
+
 ## 引入其他配置文件
 
 http块中引入其他配置文件
@@ -50,5 +58,18 @@ http块
 
 ```
 client_max_body_size 100m;
+```
+
+```
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-Port $server_port;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        
+        
+    proxy_set_header Host $host;
+	proxy_set_header X-Real-IP $remote_addr;
+	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 ```
 
