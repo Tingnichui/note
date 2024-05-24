@@ -239,7 +239,7 @@ rm /usr/local/mysql/data /usr/local/mysql/my.cnf -rf
 
 # 解压复制节点文件
 cd /usr/local/mysql
-tar -zxvf mysql_20240503_bak.tar.gz
+tar -zxvf mysql_20240503_bak.tar.gz -C /usr/local
 
 rm /usr/local/mysql/data/auto.cnf -rf
 ```
@@ -296,4 +296,11 @@ SHOW SLAVE STATUS\G;
 
 1. https://dev.mysql.com/doc/refman/5.7/en/replication-howto-additionalslaves.html
 
-4. https://blog.csdn.net/jmwn99/article/details/122800962)
+2. https://blog.csdn.net/jmwn99/article/details/122800962)
+
+## 查看从库同步状态
+
+### 参考文章
+
+1. [细说show slave status参数详解（最全）【转】](https://www.cnblogs.com/paul8339/p/7615310.html)
+
