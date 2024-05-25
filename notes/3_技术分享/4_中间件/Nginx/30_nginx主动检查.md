@@ -34,6 +34,7 @@ configure arguments: --prefix=/usr/local/nginx --with-http_stub_status_module --
 # 重新编译
 ./configure --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_ssl_module --add-module=/usr/local/nginx/modules/nginx_upstream_check_module-0.4.0
 
+# 有的教程说不要make install，我这边试了一下，光make不生效，make install之后才成功
 make && make install
 
 # 启动
@@ -82,4 +83,5 @@ server {
 1. [Nginx负载均衡健康检查第三方模块 nginx_upstream_check_module 功能的实现](https://blog.csdn.net/qq_40880022/article/details/121882051)
 2. [nginx入门学习—— 在已安装好的nginx上添加nginx_upstream_check_module模块（三）](https://blog.csdn.net/Cherry8811cy/article/details/40711965)
 3. [nginx动态添加nginx_upstream_check_module健康检查模块](https://www.cnblogs.com/LiuChang-blog/p/12501226.html)
-4. ###### [nginx 添加第三方nginx_upstream_check_module 模块实现健康状态检测](https://www.cnblogs.com/dance-walter/p/12212607.html)
+4. [nginx 添加第三方nginx_upstream_check_module 模块实现健康状态检测](https://www.cnblogs.com/dance-walter/p/12212607.html)
+5. [使用nginx_upstream_check_module对后端服务进行健康检测](https://www.cnblogs.com/fengjian2016/p/15995549.html)
