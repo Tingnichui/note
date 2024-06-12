@@ -15,6 +15,10 @@ set global expire_logs_days = 7;
 set global max_binlog_size = 1048576;
 
 
+# 设置后不会立即清除，生效条件为
+# binlog大小超过max_binlog_size
+# 手动执行flush logs
+# 重新启动时(MySQL 将会new一个新文件用于记录binlog)
 
 ```
 
