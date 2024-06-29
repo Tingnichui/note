@@ -143,6 +143,7 @@
         - [multipartfile转file](/notes/3_技术分享/2_代码实现/10_后端/multipartfile转file.md)
         - [Mybatis自定义Handler实现Json数组转List对象](/notes/3_技术分享/2_代码实现/10_后端/Mybatis自定义Handler实现Json数组转List对象.md)
         - [springboot排除bean](/notes/3_技术分享/2_代码实现/10_后端/springboot排除bean.md)
+        - [spring配置加密](/notes/3_技术分享/2_代码实现/10_后端/spring配置加密.md)
         - [多线程处理业务-处理结束关闭线程池](/notes/3_技术分享/2_代码实现/10_后端/多线程处理业务-处理结束关闭线程池.md)
         - [微信支付](/notes/3_技术分享/2_代码实现/10_后端/微信支付.md)
         - [手动式事务](/notes/3_技术分享/2_代码实现/10_后端/手动式事务.md)
