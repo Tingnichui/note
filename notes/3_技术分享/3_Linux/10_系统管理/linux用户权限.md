@@ -171,7 +171,23 @@ chown dev:dev dev/
 ·-R：递归修改指定目录下所有文件、子目录的归属
 ```
 
+## 案例
+
+```
+# 创建开发用户组
+groupadd devusers
+# 创建用户 修改密码 修改所属组
+useradd deploy
+passwd deploy
+# 修改属主 属组
+chown deploy:devusers -R /home/application/jljs
+```
+
+
+
 ## 参考文章
 
 1. [Linux用户权限](https://blog.csdn.net/weixin_43880061/article/details/123432772)
+1. https://docs.pingcode.com/ask/84264.html
+1. [Linux用户及权限管理](https://www.cnblogs.com/xiaozhi1223/p/15126292.html)
 

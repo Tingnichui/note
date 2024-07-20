@@ -34,7 +34,7 @@ docker exec -it frps /bin/sh
 # 绑定端口
 bindPort = 7000
 # 鉴权
-auth.token = "n4,!n+%b_?)tpi~KhsG,"
+auth.token = "1231312"
 # 端口白名单，防止端口被滥用，可以手动指定允许哪些端口被使用，
 allowPorts = [
   { start = 2000, end = 3000 },
@@ -66,3 +66,12 @@ frpc.exe -c frpc.toml
 ```
 
 修改frpc.toml配置
+
+## docker
+
+```
+docker pull snowdreamtech/frpc:0.54.0
+ 
+docker run --restart=always --network host -d -v /home/application/frpc/frpc.toml:/etc/frp/frpc.toml --name frpc snowdreamtech/frpc:0.54.0
+```
+
