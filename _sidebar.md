@@ -263,6 +263,7 @@
       - [可视化工具](/notes/3_技术分享/4_中间件/可视化工具/)
         - [kafka-map](/notes/3_技术分享/4_中间件/可视化工具/kafka-map.md)
         - [zoonavigator](/notes/3_技术分享/4_中间件/可视化工具/zoonavigator.md)
+      - [nvm](/notes/3_技术分享/4_中间件/nvm.md)
       - [RabbitMQ](/notes/3_技术分享/4_中间件/RabbitMQ.md)
     - [windows](/notes/3_技术分享/5_windows/)
       - [tcping](/notes/3_技术分享/5_windows/tcping.md)
