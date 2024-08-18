@@ -48,10 +48,6 @@ location /web {
 }
 ```
 
-
-
-
-
 ## 设置上传文件最大
 
 http块
@@ -71,5 +67,27 @@ client_max_body_size 100m;
     proxy_set_header Host $host;
 	proxy_set_header X-Real-IP $remote_addr;
 	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+```
+
+## H5不缓存
+
+https://segmentfault.com/a/1190000037521526
+
+https://juejin.cn/post/7140840849302093861
+
+```
+expires -1;
+add_header 'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+```
+
+
+
+```
+location / {
+      expires -1;
+      add_header 'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+      try_files $uri $uri/ @router;
+      index index.html;
+    }
 ```
 
