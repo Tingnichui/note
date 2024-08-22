@@ -222,6 +222,7 @@
           - [MySql系统变量](/notes/3_技术分享/4_中间件/MySQL/MySql调优/00_MySql系统变量.md)
           - [MySql配置调优](/notes/3_技术分享/4_中间件/MySQL/MySql调优/10_MySql配置调优.md)
           - [sql调优](/notes/3_技术分享/4_中间件/MySQL/MySql调优/20_sql调优.md)
+        - [shell脚本](/notes/3_技术分享/4_中间件/MySQL/shell脚本/)
         - [00_mysql安装](/notes/3_技术分享/4_中间件/MySQL/00_mysql安装.md)
         - [01_mysql版本升级](/notes/3_技术分享/4_中间件/MySQL/01_mysql版本升级.md)
         - [02_mySql用户管理](/notes/3_技术分享/4_中间件/MySQL/02_mySql用户管理.md)
