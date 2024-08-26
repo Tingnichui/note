@@ -17,7 +17,7 @@ docker pull snowdreamtech/frps:0.54.0
 ```
 
 ```shell
-docker run --restart=always --network host -d -v /home/frp/frps.toml:/etc/frp/frps.toml --name frps snowdreamtech/frps:0.54.0
+docker run --restart=always --network host -d -v /home/application/frps/frps.toml:/etc/frp/frps.toml --name frps snowdreamtech/frps:0.54.0
 ```
 
 ```
