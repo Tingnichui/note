@@ -282,6 +282,7 @@
       - [python免安装](/notes/3_技术分享/99_其他/python免安装.md)
       - [RAID](/notes/3_技术分享/99_其他/RAID.md)
       - [SingleFile网页快照](/notes/3_技术分享/99_其他/SingleFile网页快照.md)
+      - [Squid](/notes/3_技术分享/99_其他/Squid.md)
       - [windows备份与还原](/notes/3_技术分享/99_其他/windows备份与还原.md)
       - [子网掩码](/notes/3_技术分享/99_其他/子网掩码.md)
       - [手动打包到本地maven仓库](/notes/3_技术分享/99_其他/手动打包到本地maven仓库.md)
