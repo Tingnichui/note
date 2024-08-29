@@ -94,7 +94,7 @@ stop() {
           # 修改服务健康状态
           down
           # 修改服务健康状态后等待100秒再停止服务
-          echo "Wait for 100 seconds to stop the service after modifying its health status"
+          echo "Wait for $HEALTH_DOWN_TIME seconds to stop the service after modifying its health status"
           sleep "$HEALTH_DOWN_TIME"
         fi
 
