@@ -34,7 +34,7 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
-BACKUP_FILE_NAME="${BACKUP_LOCATION}/${DATABASE}_$1_${BACKUP_TIME}.tar.gz"
+BACKUP_FILE_NAME="${BACKUP_LOCATION}/${DATABASE}_$1_${BACKUP_TIME}.sql.gz"
 
 /usr/local/mysql/bin/mysqldump -h"$MYSQL_HOST" -P"$MYSQL_PORT" -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" --routines --single-transaction --quick --databases "$DATABASE" --tables "$1" |gzip > "$BACKUP_FILE_NAME"
 
