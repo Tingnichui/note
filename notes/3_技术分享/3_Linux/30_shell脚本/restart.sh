@@ -18,8 +18,8 @@ JAVA_OPTS="$JAVA_OPTS -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${BASE_PA
 JAVA_OPTS="$JAVA_OPTS -Djasypt.encryptor.password=${JASYPT_ENCRYPTOR_PASSWORD}"
 
 HEALTH_FLAG=false
-HEALTH_CHECK_URL="http://127.0.0.1:8085/lrb-agent-api/agent/health/healthCheck"
-CHANGE_HEALTH_URL="http://127.0.0.1:8085/lrb-agent-api/agent/health/modifyHealth?sign=8cb3b0caf964430fe6f07dd30d3e66af&healthType="
+HEALTH_CHECK_URL="http://127.0.0.1:11280/api/health/healthCheck"
+CHANGE_HEALTH_URL="http://127.0.0.1:11280/api/health/modifyHealth?sign=s5RybsyR8MFgA3xR&healthType="
 HEALTH_DOWN_TIME=100
 
 
