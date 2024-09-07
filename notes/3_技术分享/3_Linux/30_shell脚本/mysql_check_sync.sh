@@ -17,8 +17,8 @@ echo  ${Slave_IO_Running}
 echo  ${Slave_SQL_Running}
 
 if [ "${Slave_IO_Running}" = "Yes" ] && [ "${Slave_SQL_Running}" = "Yes" ];then
-  echo "$CURRENT_TIME  mysql slave is ok." >> mysql_slave_status.log
+  echo "$CURRENT_TIME  mysql slave is ok." >> /home/backup/mysql/mysql_slave_status.log
 else
-  echo "$CURRENT_TIME  mysql slave hava some problem." >> mysql_slave_status.log
+  echo "$CURRENT_TIME  mysql slave hava some problem." >> /home/backup/mysql/mysql_slave_status.log
   exit 1
 fi
