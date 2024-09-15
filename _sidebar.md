@@ -177,6 +177,7 @@
         - [route路由表](/notes/3_技术分享/3_Linux/10_系统管理/route路由表.md)
         - [rpm离线安装](/notes/3_技术分享/3_Linux/10_系统管理/rpm离线安装.md)
         - [ssh升级](/notes/3_技术分享/3_Linux/10_系统管理/ssh升级.md)
+        - [systemd](/notes/3_技术分享/3_Linux/10_系统管理/systemd.md)
         - [telnet远程连接服务器](/notes/3_技术分享/3_Linux/10_系统管理/telnet远程连接服务器.md)
         - [查看磁盘IO情况](/notes/3_技术分享/3_Linux/10_系统管理/查看磁盘IO情况.md)
         - [硬盘挂载](/notes/3_技术分享/3_Linux/10_系统管理/硬盘挂载.md)
