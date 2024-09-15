@@ -127,6 +127,90 @@ rm -rf /var/lib/selinux/targeted/active/modules/100/mysql
 rm -rf /usr/share/selinux/targeted/default/active/modules/100/mysql /usr/share/bash-completion/completions/mysql
 ```
 
+### 8.4
+
+https://blog.csdn.net/m0_68292446/article/details/133694672
+
+https://dev.mysql.com/doc/refman/8.4/en/binary-installation.html
+
+https://dev.mysql.com/doc/refman/8.4/en/data-directory-initialization.html
+
+```
+# 卸载残留
+rpm -qa | grep mysql
+rpm -qa | grep mariadb
+
+rpm -e --nodeps `rpm -qa|grep mariadb`
+rpm -e --nodeps `rpm -qa|grep mysql`
+
+# 下载解压 rpm -qa | grep glibc 看一下应该下载哪一个版本
+cd /usr/local/
+wget https://downloads.mysql.com/archives/get/p/23/file/mysql-8.4.0-linux-glibc2.17-x86_64.tar.xz
+tar -xvf mysql-8.4.0-linux-glibc2.17-x86_64.tar.xz -C /usr/local
+mv mysql-8.4.0-linux-glibc2.17-x86_64 mysql
+
+# 创建mysql用户组和用户
+groupadd mysql
+useradd -r -g mysql -s /bin/false mysql
+
+# 创建数据目录并赋予权限
+mkdir -p /usr/local/mysql/data
+chown mysql:mysql -R /usr/local/mysql/data
+chmod 750 /usr/local/mysql/data
+
+# 创建配置文件
+vim /usr/local/mysql/my.cnf
+
+[mysqld]
+bind-address=0.0.0.0
+port=3306
+user=mysql
+basedir=/usr/local/mysql
+datadir=/usr/local/mysql/data
+socket=/tmp/mysql.sock
+log-error=/usr/local/mysql/data/mysql.err
+pid-file=/usr/local/mysql/data/mysql.pid
+#character config
+character_set_server=utf8mb4
+symbolic-links=0
+explicit_defaults_for_timestamp=true
+
+[client]
+default-character-set=utf8
+
+[mysql]
+default-character-set=utf8
+
+# 初始化数据库 设置默认配置文件 等
+/usr/local/mysql/bin/mysqld --defaults-file=/usr/local/mysql/my.cnf --basedir=/usr/local/mysql/ --datadir=/usr/local/mysql/data/ --user=mysql --initialize
+
+# 查看root用户密码
+cat /usr/local/mysql/data/mysql.err
+
+# 启动mysql服务
+cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql
+service mysql start
+
+# 配置环境变量
+vim /etc/profile
+# 写入配置 路径换成自己的
+export PATH=$PATH:/usr/local/mysql/bin
+# 生效配置
+source /etc/profile
+# 验证
+mysql --version
+
+# 修改密码
+mysql -uroot -p
+
+ALTER USER 'root'@'localhost' IDENTIFIED BY '123';
+ALTER USER 'root'@'localhost' PASSWORD EXPIRE NEVER;
+FLUSH PRIVILEGES;
+use mysql;
+update user set host = '%' where user = 'root';
+FLUSH PRIVILEGES;
+```
+
 ### 8.0
 
 安装
