@@ -33,7 +33,7 @@ BACKUP_FILE_NAME="${BACKUP_LOCATION}/$1_${BACKUP_TIME}.sql.gz"
 /usr/local/mysql/bin/mysqldump -h"$MYSQL_HOST" -P"$MYSQL_PORT" -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" --routines --single-transaction --quick --databases "$1" |gzip > "$BACKUP_FILE_NAME"
 
 # 检查备份是否成功
-if [ $? -eq 0 ] && [ -f "$BACKUP_FILE_NAME" ] && [ $(stat -c%s "$BACKUP_FILE_NAME") -gt 20 ]; then
+if [ $? -eq 0 ] && [ -f "$BACKUP_FILE_NAME" ] && [ $(stat -c%s "$BACKUP_FILE_NAME") -gt 400 ]; then
   echo "备份成功: $BACKUP_FILE_NAME"
   ls -lh "${BACKUP_FILE_NAME}"
 else
