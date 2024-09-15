@@ -51,6 +51,45 @@ webServer.user = "admin"
 webServer.password = "YQv$zxczkx"
 ```
 
+### Linux
+
+```bash
+cd /usr/local
+wget https://github.com/fatedier/frp/releases/download/v0.54.0/frp_0.54.0_linux_amd64.tar.gz
+
+tar -zxvf frp_0.54.0_linux_amd64.tar.gz -C /usr/local
+mv frp_0.54.0_linux_amd64 frp
+
+
+vim /etc/systemd/system/frps.service
+
+[Unit]
+# 服务名称，可自定义
+Description = frp server
+After = network.target syslog.target
+Wants = network.target
+
+[Service]
+Type = simple
+# 启动frps的命令，需修改为您的frps的安装路径
+ExecStart = /usr/local/frp/frps -c /usr/local/frp/frps.toml
+
+[Install]
+WantedBy = multi-user.target
+
+# 启动frp
+systemctl start frps
+# 停止frp
+systemctl stop frps
+# 重启frp
+systemctl restart frps
+# 查看frp状态
+systemctl status frps
+
+# 设置开机自启
+systemctl enable frps
+```
+
 
 
 ## frpc客户端
