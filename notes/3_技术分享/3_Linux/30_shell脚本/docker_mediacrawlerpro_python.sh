@@ -3,7 +3,6 @@
 # 日志目录和日志文件
 LOG_DIR="/home/application/media-crawler-pro/media-crawler-python/logs"
 TIME=$(date +%Y-%m-%d_%H%M%S)
-LOG_FILE_PATH="${LOG_DIR}/${TIME}.log"
 
 # 参数验证函数
 check_params() {
@@ -56,6 +55,7 @@ crawler() {
     mkdir -p "$LOG_DIR"
   fi
 
+  LOG_FILE_PATH="${LOG_DIR}/${TIME}_${PLATFORM}_${TYPE}_${KEYWORDS}.log"
   # 运行 Docker 命令并记录日志
   docker exec "$DOCKER_CONTAINER_NAME" /bin/bash -c "
   python main.py \
