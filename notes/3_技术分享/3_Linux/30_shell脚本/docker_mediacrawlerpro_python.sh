@@ -1,12 +1,8 @@
 #!/bin/bash
 
-# 日志目录和日志文件
-LOG_DIR="/home/application/media-crawler-pro/media-crawler-python/logs"
-TIME=$(date +%Y-%m-%d_%H%M%S)
-
 # 参数验证函数
 check_params() {
-  if [[ -z "$2" || -z "$3" || -z "$4" || -z "$5" ]]; then
+  if [[ -z "$2" || -z "$3" || -z "$4" || -z "$5" || -z "$6" || -z "$7" ]]; then
     echo "Error: 容器名称、平台、类型和关键词都不能为空 $*"
     exit 1
   fi
@@ -36,11 +32,16 @@ status() {
 
 # 定义crawler函数 1.容器名称 2.媒体平台 3.爬虫类型 4.关键词
 crawler() {
+  # 日志目录和日志文件
+  local LOG_DIR="/home/application/media-crawler-pro/media-crawler-python/logs/$(date +%Y%m%d)"
+  local TIME=$(date +%Y%m%d_%H%M%S)
   # 从参数获取容器名称、平台、类型和关键词
   local DOCKER_CONTAINER_NAME="$2"
   local PLATFORM="$3"
   local TYPE="$4"
   local KEYWORDS="$5"
+  local RECORD_ID="$6"
+  local START_PAGE="$7"
 
   # 检查参数是否为空
   check_params "$@"
@@ -55,13 +56,14 @@ crawler() {
     mkdir -p "$LOG_DIR"
   fi
 
-  LOG_FILE_PATH="${LOG_DIR}/${TIME}_${PLATFORM}_${TYPE}_${KEYWORDS}.log"
+  LOG_FILE_PATH="${LOG_DIR}/${TIME}_${PLATFORM}_${TYPE}_${KEYWORDS}_${RECORD_ID}.log"
   # 运行 Docker 命令并记录日志
   docker exec "$DOCKER_CONTAINER_NAME" /bin/bash -c "
   python main.py \
     --save_data_option db \
     --platform '$PLATFORM' \
     --type '$TYPE' \
+    --start '$START_PAGE' \
     --keywords '$KEYWORDS'" > "$LOG_FILE_PATH" 2>&1 &
 
   if [ $? -eq 0 ]; then
