@@ -12,13 +12,23 @@ export https_proxy=http://127.0.0.1:7890
 source /etc/profile
 ```
 
+设置代理
 
+```bash
+export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890
+```
+
+取消代理
+
+```
+unset  http_proxy  https_proxy  all_proxy
+```
+
+验证代理
 
 ```
 curl -L google.com
 ```
-
-
 
 ## 配置服务
 
@@ -41,11 +51,17 @@ WantedBy=multi-user.target
 ```
 
 ```
+systemctl daemon-reload
 systemctl enable clash
 ```
 
 ```
 systemctl start clash
+systemctl restart clash
+```
+
+```
+systemctl stop clash
 ```
 
 ```
@@ -60,3 +76,5 @@ journalctl -xe
 3. [Linux系列 CentOS7使用Clash进行网络代理](https://www.sangmuen.com/?p=277)
 4. [clash-on-linux配置](https://kevinello.ltd/2023/03/05/clash-on-linux%E9%85%8D%E7%BD%AE/)
 5. [clash官网](https://clash-apps.com/)
+6. [Linux 命令下安装与使用 Clash 带 UI 管理界面](https://blog.cyida.com/2023/24ANW6D.html)
+7. https://github.com/haishanh/yacd
