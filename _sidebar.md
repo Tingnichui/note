@@ -277,6 +277,7 @@
       - [路由表](/notes/3_技术分享/5_windows/路由表.md)
       - [远程连接](/notes/3_技术分享/5_windows/远程连接.md)
     - [其他](/notes/3_技术分享/99_其他/)
+      - [app动态调试](/notes/3_技术分享/99_其他/app动态调试.md)
       - [APP抓包](/notes/3_技术分享/99_其他/APP抓包.md)
       - [cpu标高](/notes/3_技术分享/99_其他/cpu标高.md)
       - [docker镜像转发](/notes/3_技术分享/99_其他/docker镜像转发.md)
