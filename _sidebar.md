@@ -254,6 +254,7 @@
         - [配置ssl证书](/notes/3_技术分享/4_中间件/Nginx/11_配置ssl证书.md)
         - [nginx配置](/notes/3_技术分享/4_中间件/Nginx/20_nginx配置.md)
         - [nginx主动检查](/notes/3_技术分享/4_中间件/Nginx/30_nginx主动检查.md)
+        - [配置密码访问](/notes/3_技术分享/4_中间件/Nginx/31_配置密码访问.md)
       - [Redis](/notes/3_技术分享/4_中间件/Redis/)
         - [Redis安装](/notes/3_技术分享/4_中间件/Redis/00_Redis安装.md)
         - [redis恢复与备份](/notes/3_技术分享/4_中间件/Redis/10_redis恢复与备份.md)
