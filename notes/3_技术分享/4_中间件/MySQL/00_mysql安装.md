@@ -209,6 +209,10 @@ FLUSH PRIVILEGES;
 use mysql;
 update user set host = '%' where user = 'root';
 FLUSH PRIVILEGES;
+
+# 设置开机自启
+chkconfig --add mysql
+chkconfig --list
 ```
 
 ### 8.0
