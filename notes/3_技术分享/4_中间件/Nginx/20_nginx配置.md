@@ -18,6 +18,17 @@ https://nginx.org/en/docs/http/ngx_http_proxy_module.html
 
 [Nginx配置文件详解](https://www.cnblogs.com/54chensongxia/p/12938929.html)
 
+## 设置重定向
+
+```
+return 307 https://${server_name}$request_uri;
+```
+
+```
+# 不要使用这种方式，会丢失请求参数
+rewrite ^(.*)$ https://$host$1;
+```
+
 
 
 ## 引入其他配置文件
